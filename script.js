@@ -32,7 +32,7 @@ const gameboard = function () {
 }();
 
 const gameController = function () {
-    
+
 }();
 
 function Cell() {
@@ -56,6 +56,7 @@ function Cell() {
 function Player() {
     let score = 0;
     let token;
+    let playerNumber;
 
     const winRound = () => {
         score++;
@@ -64,4 +65,18 @@ function Player() {
     const chooseToken = (chosenToken) => {
         token = chosenToken;
     };
+
+    return {winRound, chooseToken}
+}
+
+function Bot() {
+    let {winRound, chooseToken} = Player();
+    
+    return {winRound, chooseToken};
+}
+
+function Human() {
+    let {winRound, chooseToken} = Player();
+
+    return {winRound, chooseToken};
 }
