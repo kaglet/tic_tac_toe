@@ -1,33 +1,3 @@
-const gameboard = function () {
-    const cols = rows = 3;
-    board = [];
-
-    for (let i = 0; i < rows; i++) {
-        board[i] = [];
-        for (let j = 0; j < cols; j++) {
-            board[i].push(Cell());
-        }
-    }
-
-    const printBoard = () => {
-        // Read right to left as you work with immediately returned/evaluated results of execution
-        // Take each cell and map to a single value and form a row array and return that
-        // Then for each row map it to this new row array to form a new board array
-        const valueBoard = board.map(row => row.map(cell => cell.getValue()));
-        console.log(valueBoard);
-    };
-
-    const playMove = ({ row, col }, player) => {
-        const isMoveValid = board[row][col].getValue === "";
-        if (!isMoveValid) return;
-
-        board[row][col] = player
-    };
-
-    const getBoard = () => board;;
-
-    return { printBoard, playMove, getBoard };
-}();
 
 const menu = function() {
     const getSelectedPlayers = () => {
@@ -62,21 +32,71 @@ const menu = function() {
     return {getSelectedPlayers};
 }();
 
-const gameController = function ({player1, player2}) {
-    let player1;
-    let player2;
+// One instance of the gameboard that we can clear later
+// This single instance is global (no multiple instances) as opposed to the factory function being global
+// If there can be one instance whose state we reset after instantiation then ok, it may better for memory if used as intended as one object for the entire state of the application 
+const gameboard = function () {
+    const cols = rows = 3;
+    board = [];
+
+    for (let i = 0; i < rows; i++) {
+        board[i] = [];
+        for (let j = 0; j < cols; j++) {
+            board[i].push(Cell());
+        }
+    }
+
+    const printBoard = () => {
+        // Read right to left as you work with immediately returned/evaluated results of execution
+        // Take each cell and map to a single value and form a row array and return that
+        // Then for each row map it to this new row array to form a new board array
+        const valueBoard = board.map(row => row.map(cell => cell.getValue()));
+        console.log(valueBoard);
+    };
+
+    const playMove = ({ row, col }, player) => {
+        const isMoveValid = board[row][col].getValue === "";
+        if (!isMoveValid) return;
+
+        board[row][col] = player.token;
+    };
+
+    const getBoard = () => board;
+
+    return { printBoard, playMove, getBoard };
+}();
+
+const gameController = function () {
+    let {player1, player2} = menu.getSelectedPlayers();
+
     let activePlayer = player1;
 
     function switchTurn() {
         activePlayer = (activePlayer === player1) ? player2 : player1;
     }
 
-    return {switchTurn};
+    function printRound() {
+        gameboard.printBoard();
+        console.log('It is the following player\'s turn: ')
+        console.log(activePlayer.token);
+    }
+
+    printRound();
+
+    return { switchTurn, activePlayer, printRound };
 };
 
 // There are different gameplay flows so encapsulate the functionality for handling that in these functions that can be invoked when needed
+// Gameplay flow and order may differ and once executed used (inherited too) functions can be used in different ones
 function HumanBotGameController() {
     let controller = gameController();
+
+    function playRound({ row, col }) {
+        gameboard.playMove({row, col}, controller.activePlayer);
+        controller.printRound();
+
+        controller.switchTurn();
+    }
 
     return Object.assign({}, controller);
 }
@@ -114,6 +134,8 @@ function Cell() {
 function Player() {
     let score = 0;
     let token;
+    // TODO: Do something with the name, like use it in printings
+    let name;
 
     const winRound = () => {
         score++;
@@ -137,3 +159,5 @@ function Human() {
 
     return { winRound, chooseToken };
 }
+
+// TO DO - choose token
