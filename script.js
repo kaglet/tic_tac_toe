@@ -24,20 +24,15 @@ const gameboard = function () {
         board[row][col] = player
     };
 
-    const getBoard = () => {
-        return board;
-    };
+    const getBoard = () => board;;
 
     return { printBoard, playMove, getBoard };
 }();
 
-const gameController = function () {
-    let player1;
-    let player2;
-
-    const getPlayers = () => {
+const menu = function() {
+    const getSelectedPlayers = () => {
         let player1Type = prompt("Choose player 1 type. Enter 'H' for human or 'B' for bot.", 'H');
-        
+
         switch (player1Type) {
             case 'H':
                 player1 = Human();
@@ -61,12 +56,43 @@ const gameController = function () {
             default:
                 break;
         }
-
-        console.log({ player1, player2 })
+        return {player1, player2};
     };
 
-    getPlayers();
+    return {getSelectedPlayers};
 }();
+
+const gameController = function ({player1, player2}) {
+    let player1;
+    let player2;
+    let activePlayer = player1;
+
+    function switchTurn() {
+        activePlayer = (activePlayer === player1) ? player2 : player1;
+    }
+
+    return {switchTurn};
+};
+
+// There are different gameplay flows so encapsulate the functionality for handling that in these functions that can be invoked when needed
+function HumanBotGameController() {
+    let controller = gameController();
+
+    return Object.assign({}, controller);
+}
+
+function HumanHumanGameController() {
+    let controller = gameController();
+
+    return Object.assign({}, controller);
+}
+
+function BotBotGameController() {
+    let controller = gameController();
+
+    return Object.assign({}, controller);
+}
+
 
 function Cell() {
     let value = "";
@@ -79,9 +105,8 @@ function Cell() {
         value = token;
     }
 
-    const getValue = () => {
-        return value;
-    }
+    const getValue = () => value;
+
 
     return { isEmpty, writeToken, getValue };
 }
@@ -89,7 +114,6 @@ function Cell() {
 function Player() {
     let score = 0;
     let token;
-    let playerNumber;
 
     const winRound = () => {
         score++;
