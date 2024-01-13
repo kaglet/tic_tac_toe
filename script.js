@@ -5,7 +5,7 @@ const gameboard = function () {
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < cols; j++) {
-            board[i].push(Cell());            
+            board[i].push(Cell());
         }
     }
 
@@ -17,7 +17,7 @@ const gameboard = function () {
         console.log(valueBoard);
     };
 
-    const playMove = ({row, col}, player) => {
+    const playMove = ({ row, col }, player) => {
         const isMoveValid = board[row][col].getValue === "";
         if (!isMoveValid) return;
 
@@ -28,16 +28,49 @@ const gameboard = function () {
         return board;
     };
 
-    return {printBoard, playMove, getBoard};
+    return { printBoard, playMove, getBoard };
 }();
 
 const gameController = function () {
+    let player1;
+    let player2;
 
+    const getPlayers = () => {
+        let player1Type = prompt("Choose player 1 type. Enter 'H' for human or 'B' for bot.", 'H');
+        
+        switch (player1Type) {
+            case 'H':
+                player1 = Human();
+                break;
+            case 'B':
+                player1 = Bot();
+                break;
+            default:
+                break;
+        }
+
+        let player2Type = prompt("Choose player 2 type. Enter 'H' for human or 'B' for bot.", 'H');
+
+        switch (player2Type) {
+            case 'H':
+                player2 = Human();
+                break;
+            case 'B':
+                player2 = Bot();
+                break;
+            default:
+                break;
+        }
+
+        console.log({ player1, player2 })
+    };
+
+    getPlayers();
 }();
 
 function Cell() {
     let value = "";
-    
+
     const isEmpty = () => {
         return value === "";
     }
@@ -50,7 +83,7 @@ function Cell() {
         return value;
     }
 
-    return {isEmpty, writeToken, getValue};
+    return { isEmpty, writeToken, getValue };
 }
 
 function Player() {
@@ -66,17 +99,17 @@ function Player() {
         token = chosenToken;
     };
 
-    return {winRound, chooseToken}
+    return { winRound, chooseToken }
 }
 
 function Bot() {
-    let {winRound, chooseToken} = Player();
-    
-    return {winRound, chooseToken};
+    let { winRound, chooseToken } = Player();
+
+    return { winRound, chooseToken };
 }
 
 function Human() {
-    let {winRound, chooseToken} = Player();
+    let { winRound, chooseToken } = Player();
 
-    return {winRound, chooseToken};
+    return { winRound, chooseToken };
 }
