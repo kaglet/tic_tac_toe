@@ -13,9 +13,25 @@ const gameboard = function () {
         // Read right to left as you work with immediately returned/evaluated results of execution
         // Take each cell and map to a single value and form a row array and return that
         // Then for each row map it to this new row array to form a new board array
-        console.log(board.map(row => row.map(cell => cell.getValue())));
+        const valueBoard = board.map(row => row.map(cell => cell.getValue()));
+        console.log(valueBoard);
     };
 
+    const playMove = ({row, col}, player) => {
+        const isMoveValid = board[row][col].getValue === "";
+        if (!isMoveValid) return;
+
+        board[row][col] = player
+    };
+
+    const getBoard = () => {
+        return board;
+    };
+
+    return {printBoard, playMove, getBoard};
+}();
+
+const gameController = function () {
     
 }();
 
@@ -26,13 +42,26 @@ function Cell() {
         return value === "";
     }
 
-    const writeMark = (mark) => {
-        value = mark;
+    const writeToken = (token) => {
+        value = token;
     }
 
     const getValue = () => {
         return value;
     }
 
-    return {isEmpty, writeMark, getValue};
+    return {isEmpty, writeToken, getValue};
+}
+
+function Player() {
+    let score = 0;
+    let token;
+
+    const winRound = () => {
+        score++;
+    };
+
+    const chooseToken = (chosenToken) => {
+        token = chosenToken;
+    };
 }
