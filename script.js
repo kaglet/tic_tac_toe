@@ -5,15 +5,18 @@ const gameboard = function () {
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < cols; j++) {
-            board[i].push("cell");            
+            board[i].push(Cell());            
         }
     }
 
     const printBoard = () => {
-        board.map(row => row)
+        // Read right to left
+        // Take each cell and map to a single value and form a row array and return that
+        // Then for each row map it to this new row array to form a new board array
+        console.log(board.map(row => row.map(cell => cell.getValue())));
     };
 
-    console.dir(board);
+    
 }();
 
 function Cell() {
@@ -23,13 +26,13 @@ function Cell() {
         return value === "";
     }
 
-    const writeValue = (val) => {
-        value = val;
+    const writeMark = (mark) => {
+        value = mark;
     }
 
     const getValue = () => {
         return value;
     }
 
-    return {isEmpty, writeValue, getValue};
+    return {isEmpty, writeMark, getValue};
 }
