@@ -9,5 +9,27 @@ const gameboard = function () {
         }
     }
 
+    const printBoard = () => {
+        board.map(row => row)
+    };
+
     console.dir(board);
 }();
+
+function Cell() {
+    let value = "";
+    
+    const isEmpty = () => {
+        return value === "";
+    }
+
+    const writeValue = (val) => {
+        value = val;
+    }
+
+    const getValue = () => {
+        return value;
+    }
+
+    return {isEmpty, writeValue, getValue};
+}
