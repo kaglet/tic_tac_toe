@@ -37,13 +37,21 @@ function Player() {
 function Bot() {
     let { winRound, chooseToken } = Player();
 
+    let name = "bot";
+
     return { winRound, chooseToken };
 }
 
 function Human() {
     let { winRound, chooseToken } = Player();
 
-    return { winRound, chooseToken };
+    let name = "human";
+
+    const getName = () => name;
+
+    const setName = (newName) => {name = newName}; 
+
+    return { winRound, chooseToken, getName, setName};
 }
 
 // Single instance objects
@@ -78,6 +86,20 @@ const gameSession = function() {
             default:
                 break;
         }
+
+        if (player1Type === 'H' && player2Type === 'H') {
+            player1.setName('Player 1');
+            player2.setName('Player 2');
+        } else if (player1Type === 'H' && player2Type === 'B') {
+            player1.setName('You');
+            player2.setName('Bot');
+        } else if (player1Type === 'B' && player2Type === 'H') {
+            player1.setName('Bot');
+            player2.setName('You');
+        } else if (player1Type === 'B' && player2Type === 'B') {
+            player1.setName('Bot 1');
+            player2.setName('Bot 2');
+        }
     };
 
     const getSelectedPlayers = () => {player1, player2};
@@ -99,6 +121,14 @@ const gameboard = function () {
         }
     }
 
+    const resetBoard = () => {
+        board.forEach((row, i) => {
+            row.forEach((col, j) => {
+                board[i][j].value = " ";
+            });
+        });
+    };
+
     const printBoard = () => {
         // Read right to left as you work with immediately returned/evaluated results of execution
         // Take each cell and map to a single value and form a row array and return that
@@ -116,7 +146,7 @@ const gameboard = function () {
 
     const getBoard = () => board;
 
-    return { printBoard, playMove, getBoard };
+    return { printBoard, playMove, getBoard, resetBoard };
 }();
 
 const gameplayController = function () {
@@ -130,8 +160,7 @@ const gameplayController = function () {
 
     const printRound = () => {
         gameboard.printBoard();
-        console.log('It is the following player\'s turn: ')
-        console.log(activePlayer.token);
+        console.log(`It is the following player\'s turn: ${activePlayer.getName()} `);
     };
 
     const getActivePlayer = () => activePlayer;
@@ -139,7 +168,7 @@ const gameplayController = function () {
     printRound();
 
     return { switchTurn, getActivePlayer, printRound };
-};
+}();
 
 // There are different gameplay flows so encapsulate the functionality for handling that in these functions that can be invoked when needed
 // Gameplay flow and order may differ and once executed used (inherited too) functions can be used in different ones
@@ -148,10 +177,17 @@ let humanBotGameController = () => {
     let controller = gameplayController();
 
     function playRound({ row, col }) {
+        // announce their move
+        console.log(`Placing ${controller.getActivePlayer()}'s token into row ${row} and column ${col}`);
+        // play their move
         gameboard.playMove({row, col}, controller.getActivePlayer());
+
+        // show visually the new game state for the active player after calling play round for a player's move.
+        controller.switchTurn();
         controller.printRound();
 
-        controller.switchTurn();
+        // you'll call the function and play for the computer out of the available spaces instead of getting it from user input
+        // TODO: Make needed computer/bot function to only play in available spaces.
     }
 
     return Object.assign({}, controller, {playRound});
