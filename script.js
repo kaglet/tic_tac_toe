@@ -38,8 +38,21 @@ function Bot() {
     let { winRound, chooseToken } = Player();
 
     let name = "bot";
+    
+    const playBotMove = () => {
+        // eliminate spaces played on
+        // play in flattened/reduced cell array by criteria which is by reference so its ok if one of those cells in the 1D array are filled
+        // they correspond to cells in the 3D array
 
-    return { winRound, chooseToken };
+        let availableCells = gameboard.getBoard().forEach(row => row.filter(cell => cell.getValue() !== '')); // Also reduce the dimensionality of the array
+        console.log(availableCells.some(row => row.length > 0));
+    };
+
+    const getName = () => name;
+
+    const setName = (newName) => {name = newName}; 
+
+    return { winRound, chooseToken, playBotMove, getName, setName };
 }
 
 function Human() {
@@ -56,6 +69,7 @@ function Human() {
 
 // Single instance objects
 
+// Bundles up (stores) and sets game session data
 const gameSession = function() {
     let player1, player2;
 
@@ -102,7 +116,9 @@ const gameSession = function() {
         }
     };
 
-    const getSelectedPlayers = () => {player1, player2};
+    const getSelectedPlayers = () => {
+        return {player1, player2};
+    };
 
     return {getSelectedPlayers, createPlayers};
 }();
@@ -149,7 +165,9 @@ const gameboard = function () {
     return { printBoard, playMove, getBoard, resetBoard };
 }();
 
+// Bundles up and controls the overall gameplay flow (state) and all functions have to do with that state
 const gameplayController = function () {
+    gameSession.createPlayers();
     let {player1, player2} = gameSession.getSelectedPlayers();
 
     let activePlayer = player1;
@@ -165,22 +183,24 @@ const gameplayController = function () {
 
     const getActivePlayer = () => activePlayer;
 
+    // all controllers must execute this code anyway
     printRound();
 
     return { switchTurn, getActivePlayer, printRound };
-}();
+};
 
 // There are different gameplay flows so encapsulate the functionality for handling that in these functions that can be invoked when needed
 // Gameplay flow and order may differ and once executed used (inherited too) functions can be used in different ones
 
-let humanBotGameController = () => {
+let humanBotGameController = (() => {
     let controller = gameplayController();
 
-    function playRound({ row, col }) {
+    // expect the same properties in the object for the sake of destructuring otherwise it won't know what to destructure
+    const playRound = ({row, col}) => {
         // announce their move
         console.log(`Placing ${controller.getActivePlayer()}'s token into row ${row} and column ${col}`);
         // play their move
-        gameboard.playMove({row, col}, controller.getActivePlayer());
+        gameboard.playMove({ row, col }, controller.getActivePlayer());
 
         // show visually the new game state for the active player after calling play round for a player's move.
         controller.switchTurn();
@@ -188,19 +208,47 @@ let humanBotGameController = () => {
 
         // you'll call the function and play for the computer out of the available spaces instead of getting it from user input
         // TODO: Make needed computer/bot function to only play in available spaces.
-    }
+    };
 
-    return Object.assign({}, controller, {playRound});
-}
+    // fire all round sets manually (3)
+    const playAllRounds = () => {
+        // rounds can be more than 3 and its until win so we can implement a win checker on the game controller itself, think its the best place
+        const roundNumber = 1;
+        for (let i = 0; i < roundNumber; i++) {
+            let selectedRowNumber = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
+            let selectedColNumber = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
+            playRound({row: selectedRowNumber, col: selectedColNumber});
+            // common function on controller available for all shared controller instances a shared inherited function for this instance
+            controller.switchTurn();
+            // computer auto plays
 
-let humanHumanGameController = () => {
+            // function all bot players can perform is place random move on open spot on board
+            // if I match 3
+            // Depending on bot is player 1 or 2 it depends if it is playing first or not, if you start flow and switch turns it will auto-take care of it
+            
+            playRound(controller.getActivePlayer().playBotMove()); // if its a bot then this method will be available, it should not be an assumption but enforced and ensured in code
+
+            // could decide score and winner if you needed that
+        }
+    };
+
+    return Object.assign({}, controller, {playRound, playAllRounds});
+});
+
+let humanHumanGameController = (() => {
     let controller = gameplayController();
 
     return Object.assign({}, controller);
-}
+});
 
-let botBotGameController = () => {
+let botBotGameController = (() => {
     let controller = gameplayController();
 
     return Object.assign({}, controller);
-}
+});
+
+// this is the hardest case of human and bot or just use an if statement for whoever the next player type is, its either or
+// then choose which function to execute based on the active player type: "player" or "bot"
+humanBotGameController().playAllRounds();
+
+// TODO: Check that it is a bot player type instance with the method present
