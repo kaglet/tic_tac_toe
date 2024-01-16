@@ -31,11 +31,13 @@ function Player() {
         token = chosenToken;
     };
 
-    return { winRound, chooseToken }
+    const getToken = () => token;
+
+    return { winRound, chooseToken, getToken }
 }
 
 function Bot() {
-    let { winRound, chooseToken } = Player();
+    let player = Player();
 
     let name = "bot";
     
@@ -44,19 +46,19 @@ function Bot() {
         // play in flattened/reduced cell array by criteria which is by reference so its ok if one of those cells in the 1D array are filled
         // they correspond to cells in the 3D array
 
-        let availableCells = gameboard.getBoard().forEach(row => row.filter(cell => cell.getValue() !== '')); // Also reduce the dimensionality of the array
-        console.log(availableCells.some(row => row.length > 0));
+        let availableCells = gameboard.getBoard().flat().filter(cell => cell.isEmpty()); // Also reduce the dimensionality of the array
+        console.log(availableCells);
     };
 
     const getName = () => name;
 
     const setName = (newName) => {name = newName}; 
 
-    return { winRound, chooseToken, playBotMove, getName, setName };
+    return Object.assign({}, player, { playBotMove, getName, setName});
 }
 
 function Human() {
-    let { winRound, chooseToken } = Player();
+    let player = Player();
 
     let name = "human";
 
@@ -64,7 +66,7 @@ function Human() {
 
     const setName = (newName) => {name = newName}; 
 
-    return { winRound, chooseToken, getName, setName};
+    return Object.assign({}, player, { getName, setName});
 }
 
 // Single instance objects
@@ -114,6 +116,9 @@ const gameSession = function() {
             player1.setName('Bot 1');
             player2.setName('Bot 2');
         }
+
+        player1.chooseToken('X');
+        player2.chooseToken('O');
     };
 
     const getSelectedPlayers = () => {
@@ -140,7 +145,7 @@ const gameboard = function () {
     const resetBoard = () => {
         board.forEach((row, i) => {
             row.forEach((col, j) => {
-                board[i][j].value = " ";
+                board[i][j].writeToken("");
             });
         });
     };
@@ -153,11 +158,12 @@ const gameboard = function () {
         console.log(valueBoard);
     };
 
+    // TODO: Check this plays a move and does not return
     const playMove = ({ row, col }, player) => {
-        const isMoveValid = board[row][col].getValue === "";
+        const isMoveValid = board[row][col].isEmpty();
         if (!isMoveValid) return;
 
-        board[row][col] = player.token;
+        board[row][col].writeToken(player.getToken());
     };
 
     const getBoard = () => board;
@@ -183,7 +189,6 @@ const gameplayController = function () {
 
     const getActivePlayer = () => activePlayer;
 
-    switchTurn();
     // all controllers must execute this code anyway
     printRound();
 
@@ -212,6 +217,7 @@ let humanBotGameController = () => {
     };
 
     // fire all round sets manually (3)
+    // TODO: Can call takeAllTurnsPlaying from the individual takeTurn function
     const playAllRounds = () => {
         // rounds can be more than 3 and its until win so we can implement a win checker on the game controller itself, think its the best place
         const roundNumber = 1;
@@ -221,6 +227,10 @@ let humanBotGameController = () => {
             playRound({row: selectedRowNumber, col: selectedColNumber});
             // common function on controller available for all shared controller instances a shared inherited function for this instance
             // computer auto plays
+
+            // TODO: I do not like play round doing multiple things so switch turn and print new round here (we play two rounds in each loop technically) or play a turn
+            // This taking on multiple roles can make things unclear when you want the functions outside of there
+            // In playing a round I don't have to print the next round, doesn't make sense
 
             // function all bot players can perform is place random move on open spot on board
             // if I match 3
