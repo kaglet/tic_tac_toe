@@ -46,8 +46,17 @@ function Bot() {
         // play in flattened/reduced cell array by criteria which is by reference so its ok if one of those cells in the 1D array are filled
         // they correspond to cells in the 3D array
 
+        /* TODO:
+           Reduce array to not show objects but to map them in result availableCells to string of values, same with 3D printing array
+           I want a better format for printing 
+        */
         let availableCells = gameboard.getBoard().flat().filter(cell => cell.isEmpty()); // Also reduce the dimensionality of the array
-        console.log(availableCells);
+
+        let min = 0;
+        let max = availableCells.length - 1;
+        randomCellPos = Math.floor(Math.random() * (max - min + 1)) + min;
+
+        availableCells[randomCellPos].writeToken(player.getToken());
     };
 
     const getName = () => name;
@@ -221,6 +230,8 @@ let humanBotGameController = () => {
     const playAllRounds = () => {
         // rounds can be more than 3 and its until win so we can implement a win checker on the game controller itself, think its the best place
         const roundNumber = 1;
+        // TODO: Test with more number of rounds since it works on one but with a trailing printing of the round whereas I need to check win condition and end early before handing it over to next player and telling them its them to play for next round
+        // no need to switch turn only to print next round, turn switch must happen after new round is shown and win condition is not met yet
         for (let i = 0; i < roundNumber; i++) {
             let selectedRowNumber = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
             let selectedColNumber = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
@@ -236,8 +247,11 @@ let humanBotGameController = () => {
             // if I match 3
             // Depending on bot is player 1 or 2 it depends if it is playing first or not, if you start flow and switch turns it will auto-take care of it
             
-            playRound(controller.getActivePlayer().playBotMove()); // if its a bot then this method will be available, it should not be an assumption but enforced and ensured in code
-
+            // Bot move will play but not by selecting a row and col but rather writing into an empty cell then calling print
+            // This is why its important that the print new round method be separate
+            controller.getActivePlayer().playBotMove(); // if its a bot then this method will be available, it should not be an assumption but enforced and ensured in code
+            controller.switchTurn();
+            controller.printRound();
             // could decide score and winner if you needed that
         }
     };
