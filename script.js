@@ -183,6 +183,7 @@ const gameplayController = function () {
 
     const getActivePlayer = () => activePlayer;
 
+    switchTurn();
     // all controllers must execute this code anyway
     printRound();
 
@@ -192,7 +193,7 @@ const gameplayController = function () {
 // There are different gameplay flows so encapsulate the functionality for handling that in these functions that can be invoked when needed
 // Gameplay flow and order may differ and once executed used (inherited too) functions can be used in different ones
 
-let humanBotGameController = (() => {
+let humanBotGameController = () => {
     let controller = gameplayController();
 
     // expect the same properties in the object for the sake of destructuring otherwise it won't know what to destructure
@@ -219,7 +220,6 @@ let humanBotGameController = (() => {
             let selectedColNumber = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
             playRound({row: selectedRowNumber, col: selectedColNumber});
             // common function on controller available for all shared controller instances a shared inherited function for this instance
-            controller.switchTurn();
             // computer auto plays
 
             // function all bot players can perform is place random move on open spot on board
@@ -233,19 +233,19 @@ let humanBotGameController = (() => {
     };
 
     return Object.assign({}, controller, {playRound, playAllRounds});
-});
+};
 
-let humanHumanGameController = (() => {
+let humanHumanGameController = () => {
     let controller = gameplayController();
 
     return Object.assign({}, controller);
-});
+};
 
-let botBotGameController = (() => {
+let botBotGameController = () => {
     let controller = gameplayController();
 
     return Object.assign({}, controller);
-});
+};
 
 // this is the hardest case of human and bot or just use an if statement for whoever the next player type is, its either or
 // then choose which function to execute based on the active player type: "player" or "bot"
