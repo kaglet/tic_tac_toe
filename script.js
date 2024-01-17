@@ -40,7 +40,9 @@ function Bot() {
     let player = Player();
 
     let name = "bot";
-    
+    let type = "bot";
+
+    // function all bot players can perform is place random move on open spot on board
     const playBotMove = () => {
         // eliminate spaces played on
         // play in flattened/reduced cell array by criteria which is by reference so its ok if one of those cells in the 1D array are filled
@@ -56,32 +58,38 @@ function Bot() {
         let max = availableCells.length - 1;
         randomCellPos = Math.floor(Math.random() * (max - min + 1)) + min;
 
+        console.log(`Placing ${name}'s token`);
         availableCells[randomCellPos].writeToken(player.getToken());
     };
 
     const getName = () => name;
 
-    const setName = (newName) => {name = newName}; 
+    const getType = () => type;
 
-    return Object.assign({}, player, { playBotMove, getName, setName});
+    const setName = (newName) => { name = newName };
+
+    return Object.assign({}, player, { playBotMove, getName, setName, getType });
 }
 
 function Human() {
     let player = Player();
 
     let name = "human";
+    let type = "human";
 
     const getName = () => name;
 
-    const setName = (newName) => {name = newName}; 
+    const getType = () => type;
 
-    return Object.assign({}, player, { getName, setName});
+    const setName = (newName) => { name = newName };
+
+    return Object.assign({}, player, { getName, setName, getType });
 }
 
 // Single instance objects
 
 // Bundles up (stores) and sets game session data
-const gameSession = function() {
+const gameSession = function () {
     let player1, player2;
 
     // TODO: Input player choice parameters to define players for the session here
@@ -131,10 +139,10 @@ const gameSession = function() {
     };
 
     const getSelectedPlayers = () => {
-        return {player1, player2};
+        return { player1, player2 };
     };
 
-    return {getSelectedPlayers, createPlayers};
+    return { getSelectedPlayers, createPlayers };
 }();
 
 const gameboard = function () {
@@ -165,8 +173,10 @@ const gameboard = function () {
     };
 
     const playMove = ({ row, col }, player) => {
+        // returns and continues rest of programming logic is move is not valid whereas it should allow you to try until you have successfully played your move (so a repeat until an undefined is not returned)
         const isMoveValid = board[row][col].isEmpty();
         if (!isMoveValid) return;
+        // To go with the above return true if move played and maybe an optional error message parameter to show in console until a valid message is shown
 
         board[row][col].writeToken(player.getToken());
     };
@@ -179,7 +189,7 @@ const gameboard = function () {
 // Bundles up functionality that initializes and controls the flow of the overall gameplay session
 const gameplayController = function () {
     gameSession.createPlayers();
-    let {player1, player2} = gameSession.getSelectedPlayers();
+    let { player1, player2 } = gameSession.getSelectedPlayers();
 
     let activePlayer = player1;
 
@@ -187,15 +197,12 @@ const gameplayController = function () {
         activePlayer = (activePlayer === player1) ? player2 : player1;
     };
 
+    // print round and that relevant info explicitly not via GUI which first extracts info like board, and active player, and does it all in the GUI to "print" instead of here
     const printRound = () => {
         gameboard.printBoard();
-        console.log(`It is the following player\'s turn: ${activePlayer.getName()} `);
     };
 
     const getActivePlayer = () => activePlayer;
-
-    // all controllers must execute this code
-    printRound();
 
     return { switchTurn, getActivePlayer, printRound };
 };
@@ -203,44 +210,62 @@ const gameplayController = function () {
 let humanBotGameController = () => {
     let controller = gameplayController();
 
-    const playRound = ({row, col}) => {
-        // announce their move
-        console.log(`Placing ${controller.getActivePlayer()}'s token into row ${row} and column ${col}`);
-        // play their move
+    // extra advantage is I can now easily reorder who plays first
+    // who goes first (order controller), only for this checks if current player is human or bot and continues from there (decides order from start)
+    const humanPlays = () => {
+        console.log(`It is the following player\'s turn: ${activePlayer.getName()}`);
+        let row = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
+        let col = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
+
+        console.log(`Placing ${controller.getActivePlayer().getName()}'s token`);
         gameboard.playMove({ row, col }, controller.getActivePlayer());
-        // print round result after play
         controller.printRound();
+    };
+
+    const botPlays = () => {
+        console.log(`It is the following player\'s turn: ${activePlayer.getName()}`);
+        controller.getActivePlayer().playBotMove();
+        controller.printRound();
+    }
+    // playing a single round will look different across controllers 
+    // A round is defined as two turns taken between P1 and P2
+    const playRound = () => {
+        if (controller.getActivePlayer()) {
+            
+        }
+        humanPlays();
+        // TODO: check for win before switching turn!
+        controller.switchTurn();
+
+        botPlays();
+
+        // TODO: Depending on bot is player 1 or 2 it depends if it is playing first or not, if you start flow and switch turns it will auto-take care of it
+
+        // Bot move will play but not by selecting a row and col but rather writing into an empty cell then calling print
+        // This is why its important that the print new round method be separate in this case not coupled with the play move
+
+        // If the object is for a bot then this method will be available, it should not be an assumption but enforced and ensured in code
+        
+        // switch turn before calling print round
+        controller.switchTurn();
+
+        // TODO: I would like to print round without announcing someone else's turn for the new round which matters for win condition too
+        
+        // could decide score and winner if you needed that
     };
 
     // TODO: Can call takeAllTurnsPlaying from the individual takeTurn function
     const playAllRounds = () => {
         // rounds can be more than 3 and its until win so we can implement a win checker on the game controller itself, think its the best place
-        const roundNumber = 3;
+        const roundNumber = 1;
         // TODO: Test with more number of rounds since it works on one but with a trailing printing of the round whereas I need to check win condition and end early before handing it over to next player and telling them its them to play for next round
         // no need to switch turn only to print next round, turn switch must happen after new round is shown and win condition is not met yet
         for (let i = 0; i < roundNumber; i++) {
-            let selectedRowNumber = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
-            let selectedColNumber = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
-            playRound({row: selectedRowNumber, col: selectedColNumber});
 
-            controller.switchTurn();
-
-            // function all bot players can perform is place random move on open spot on board
-
-            // TODO: Depending on bot is player 1 or 2 it depends if it is playing first or not, if you start flow and switch turns it will auto-take care of it
-            
-            // Bot move will play but not by selecting a row and col but rather writing into an empty cell then calling print
-            // This is why its important that the print new round method be separate in this case not coupled with the play move
-
-            // if its a bot then this method will be available, it should not be an assumption but enforced and ensured in code
-            controller.getActivePlayer().playBotMove(); 
-            controller.switchTurn();
-            controller.printRound();
-            // could decide score and winner if you needed that
         }
     };
 
-    return Object.assign({}, controller, {playRound, playAllRounds});
+    return Object.assign({}, controller, { playRound, playAllRounds });
 };
 
 let humanHumanGameController = () => {
