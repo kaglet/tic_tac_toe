@@ -137,9 +137,6 @@ const gameSession = function() {
     return {getSelectedPlayers, createPlayers};
 }();
 
-// One instance of the gameboard that we can clear later
-// This single instance is global (no multiple instances) as opposed to the factory function being global
-// If there can be one instance whose state we reset after instantiation then ok, it may better for memory if used as intended as one object for the entire state of the application 
 const gameboard = function () {
     const cols = rows = 3;
     board = [];
@@ -167,7 +164,6 @@ const gameboard = function () {
         console.log(valueBoard);
     };
 
-    // TODO: Check this plays a move and does not return
     const playMove = ({ row, col }, player) => {
         const isMoveValid = board[row][col].isEmpty();
         if (!isMoveValid) return;
@@ -180,7 +176,7 @@ const gameboard = function () {
     return { printBoard, playMove, getBoard, resetBoard };
 }();
 
-// Bundles up and controls the overall gameplay flow (state) and all functions have to do with that state
+// Bundles up functionality that initializes and controls the flow of the overall gameplay session
 const gameplayController = function () {
     gameSession.createPlayers();
     let {player1, player2} = gameSession.getSelectedPlayers();
@@ -198,37 +194,28 @@ const gameplayController = function () {
 
     const getActivePlayer = () => activePlayer;
 
-    // all controllers must execute this code anyway
+    // all controllers must execute this code
     printRound();
 
     return { switchTurn, getActivePlayer, printRound };
 };
 
-// There are different gameplay flows so encapsulate the functionality for handling that in these functions that can be invoked when needed
-// Gameplay flow and order may differ and once executed used (inherited too) functions can be used in different ones
-
 let humanBotGameController = () => {
     let controller = gameplayController();
 
-    // expect the same properties in the object for the sake of destructuring otherwise it won't know what to destructure
     const playRound = ({row, col}) => {
         // announce their move
         console.log(`Placing ${controller.getActivePlayer()}'s token into row ${row} and column ${col}`);
         // play their move
         gameboard.playMove({ row, col }, controller.getActivePlayer());
-
         // print round result after play
         controller.printRound();
-
-        // you'll call the function and play for the computer out of the available spaces instead of getting it from user input
-        // TODO: Make needed computer/bot function to only play in available spaces.
     };
 
-    // fire all round sets manually (3)
     // TODO: Can call takeAllTurnsPlaying from the individual takeTurn function
     const playAllRounds = () => {
         // rounds can be more than 3 and its until win so we can implement a win checker on the game controller itself, think its the best place
-        const roundNumber = 1;
+        const roundNumber = 3;
         // TODO: Test with more number of rounds since it works on one but with a trailing printing of the round whereas I need to check win condition and end early before handing it over to next player and telling them its them to play for next round
         // no need to switch turn only to print next round, turn switch must happen after new round is shown and win condition is not met yet
         for (let i = 0; i < roundNumber; i++) {
@@ -237,17 +224,16 @@ let humanBotGameController = () => {
             playRound({row: selectedRowNumber, col: selectedColNumber});
 
             controller.switchTurn();
-            // TODO: I do not like play round doing multiple things so switch turn and print new round here (we play two rounds in each loop technically) or play a turn
-            // This taking on multiple roles can make things unclear when you want the functions outside of there
-            // In playing a round I don't have to print the next round, doesn't make sense
 
             // function all bot players can perform is place random move on open spot on board
-            // if I match 3
-            // Depending on bot is player 1 or 2 it depends if it is playing first or not, if you start flow and switch turns it will auto-take care of it
+
+            // TODO: Depending on bot is player 1 or 2 it depends if it is playing first or not, if you start flow and switch turns it will auto-take care of it
             
             // Bot move will play but not by selecting a row and col but rather writing into an empty cell then calling print
-            // This is why its important that the print new round method be separate
-            controller.getActivePlayer().playBotMove(); // if its a bot then this method will be available, it should not be an assumption but enforced and ensured in code
+            // This is why its important that the print new round method be separate in this case not coupled with the play move
+
+            // if its a bot then this method will be available, it should not be an assumption but enforced and ensured in code
+            controller.getActivePlayer().playBotMove(); 
             controller.switchTurn();
             controller.printRound();
             // could decide score and winner if you needed that
@@ -269,8 +255,8 @@ let botBotGameController = () => {
     return Object.assign({}, controller);
 };
 
-// this is the hardest case of human and bot or just use an if statement for whoever the next player type is, its either or
-// then choose which function to execute based on the active player type: "player" or "bot"
+// Execute human-bot gameplay which is the hardest gameplay case imo, the other cases use subsets of this functionality in repetition. 
+// This is the hardest case of human and bot. For others just use an if statement for whoever the next player type is, its either or.
+// Then choose which function to execute based on the active player type: "player" or "bot". Call this function on the game session itself.
+// The game session is responsible for capturing this information and executing the game after (after the event listeners on the screen controller are pressed I guess). 
 humanBotGameController().playAllRounds();
-
-// TODO: Check that it is a bot player type instance with the method present
