@@ -222,46 +222,42 @@ let humanBotGameController = () => {
         controller.printRound();
     };
 
+    // Bot move will play but not by selecting a row and col but rather writing into an empty cell then calling print
+    // If the object is for a bot then this method will be available, it should not be an assumption but enforced and ensured in code
     const botPlays = () => {
         console.log(`It is the following player\'s turn: ${activePlayer.getName()}`);
+        console.log(`Placing ${controller.getActivePlayer().getName()}'s token`);
         controller.getActivePlayer().playBotMove();
         controller.printRound();
     }
-    // playing a single round will look different across controllers 
-    // A round is defined as two turns taken between P1 and P2
+    // Playing a single round will look different across controllers therefore it is not a shared method.
+    // A round is defined as two turns taken between P1 and P2.
+    // Across rounds this function always works to switch turns properly too.
     const playRound = () => {
-        if (controller.getActivePlayer()) {
-            
+        if (controller.getActivePlayer().getType() === "human") {
+            humanPlays();
+            // TODO: check for win before switching turn!
+            controller.switchTurn();
+            // bot will play with methods assured to be accessible
+            botPlays();
+            // TODO: check for win before switching turn!
+            controller.switchTurn();
+        } else {
+            // bot will play with methods assured to be accessible
+            botPlays();
+            // TODO: check for win before switching turn!
+            controller.switchTurn();
+            humanPlays();
+            // TODO: check for win before switching turn!
+            controller.switchTurn();
         }
-        humanPlays();
-        // TODO: check for win before switching turn!
-        controller.switchTurn();
-
-        botPlays();
-
-        // TODO: Depending on bot is player 1 or 2 it depends if it is playing first or not, if you start flow and switch turns it will auto-take care of it
-
-        // Bot move will play but not by selecting a row and col but rather writing into an empty cell then calling print
-        // This is why its important that the print new round method be separate in this case not coupled with the play move
-
-        // If the object is for a bot then this method will be available, it should not be an assumption but enforced and ensured in code
-        
-        // switch turn before calling print round
-        controller.switchTurn();
-
-        // TODO: I would like to print round without announcing someone else's turn for the new round which matters for win condition too
-        
-        // could decide score and winner if you needed that
     };
 
-    // TODO: Can call takeAllTurnsPlaying from the individual takeTurn function
     const playAllRounds = () => {
         // rounds can be more than 3 and its until win so we can implement a win checker on the game controller itself, think its the best place
         const roundNumber = 1;
-        // TODO: Test with more number of rounds since it works on one but with a trailing printing of the round whereas I need to check win condition and end early before handing it over to next player and telling them its them to play for next round
-        // no need to switch turn only to print next round, turn switch must happen after new round is shown and win condition is not met yet
         for (let i = 0; i < roundNumber; i++) {
-
+            playRound();
         }
     };
 
