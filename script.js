@@ -217,8 +217,7 @@ let humanBotGameController = () => {
         // play their move
         gameboard.playMove({ row, col }, controller.getActivePlayer());
 
-        // show visually the new game state for the active player after calling play round for a player's move.
-        controller.switchTurn();
+        // print round result after play
         controller.printRound();
 
         // you'll call the function and play for the computer out of the available spaces instead of getting it from user input
@@ -236,9 +235,8 @@ let humanBotGameController = () => {
             let selectedRowNumber = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
             let selectedColNumber = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
             playRound({row: selectedRowNumber, col: selectedColNumber});
-            // common function on controller available for all shared controller instances a shared inherited function for this instance
-            // computer auto plays
 
+            controller.switchTurn();
             // TODO: I do not like play round doing multiple things so switch turn and print new round here (we play two rounds in each loop technically) or play a turn
             // This taking on multiple roles can make things unclear when you want the functions outside of there
             // In playing a round I don't have to print the next round, doesn't make sense
