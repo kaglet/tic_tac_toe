@@ -213,7 +213,7 @@ let humanBotGameController = () => {
     // extra advantage is I can now easily reorder who plays first
     // who goes first (order controller), only for this checks if current player is human or bot and continues from there (decides order from start)
     const humanPlays = () => {
-        console.log(`It is the following player\'s turn: ${activePlayer.getName()}`);
+        console.log(`It is the following player\'s turn: ${controller.getActivePlayer().getName()}`);
         let row = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
         let col = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
 
@@ -225,11 +225,16 @@ let humanBotGameController = () => {
     // Bot move will play but not by selecting a row and col but rather writing into an empty cell then calling print
     // If the object is for a bot then this method will be available, it should not be an assumption but enforced and ensured in code
     const botPlays = () => {
-        console.log(`It is the following player\'s turn: ${activePlayer.getName()}`);
+        console.log(`It is the following player\'s turn: ${controller.getActivePlayer().getName()}`);
         console.log(`Placing ${controller.getActivePlayer().getName()}'s token`);
         controller.getActivePlayer().playBotMove();
         controller.printRound();
     }
+
+    // check win for a player
+    const checkWin = (player) => {
+        
+    };
     // Playing a single round will look different across controllers therefore it is not a shared method.
     // A round is defined as two turns taken between P1 and P2.
     // Across rounds this function always works to switch turns properly too.
