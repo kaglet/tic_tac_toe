@@ -231,9 +231,31 @@ let humanBotGameController = () => {
         controller.printRound();
     }
 
-    // check win for a player
-    const checkWin = (player) => {
-        
+    // check if previous move resulted in a winning configuration occurring
+    const checkWin = () => {
+        let horizontalMidPosition = verticalMidPosition = 1;
+        let boardArr = gameboard.getBoard();
+        // check horizontally (across rows)
+        for (let i = 0; i < gameboard.getBoard().length; i++) {
+            // check if row has matching tokens to middle token compared against left and right token
+            // if they all match anyway this will be true
+            let rowHasMatchingTokens = boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition + 1] && boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition - 1].getValue();
+            if (rowHasMatchingTokens) {
+                return true;
+            }
+        }
+
+        // check vertically (across cols)
+        for (let i = 0; i < gameboard.getBoard().length; i++) {
+            // check if col has matching tokens to middle token compared against above and below token
+            // if they all match anyway this will be true
+            let colHasMatchingTokens = boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition + 1][i].getValue() && boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition - 1][i].getValue()
+            if (colHasMatchingTokens) {
+                return true;
+            }
+        }
+
+        return false;
     };
     // Playing a single round will look different across controllers therefore it is not a shared method.
     // A round is defined as two turns taken between P1 and P2.
@@ -241,19 +263,23 @@ let humanBotGameController = () => {
     const playRound = () => {
         if (controller.getActivePlayer().getType() === "human") {
             humanPlays();
-            // TODO: check for win before switching turn!
+            // check for win before switching turn!
+            checkWin();
             controller.switchTurn();
             // bot will play with methods assured to be accessible
             botPlays();
-            // TODO: check for win before switching turn!
+            // check for win before switching turn!
+            checkWin();
             controller.switchTurn();
         } else {
             // bot will play with methods assured to be accessible
             botPlays();
-            // TODO: check for win before switching turn!
+            // check for win before switching turn!
+            checkWin();
             controller.switchTurn();
             humanPlays();
-            // TODO: check for win before switching turn!
+            // check for win before switching turn!
+            checkWin();
             controller.switchTurn();
         }
     };
