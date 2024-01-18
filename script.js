@@ -311,7 +311,7 @@ let humanBotGameController = () => {
         }
     };
 
-    return Object.assign({}, controller, { playRound, playAllRounds });
+    return Object.assign({}, controller, { playAllRounds });
 };
 
 let humanHumanGameController = () => {
