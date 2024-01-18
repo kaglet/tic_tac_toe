@@ -59,7 +59,6 @@ function Bot() {
         let max = availableCells.length - 1;
         randomCellPos = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        console.log(`Placing ${name}'s token`);
         availableCells[randomCellPos].writeToken(player.getToken());
     };
 
@@ -250,7 +249,7 @@ let humanBotGameController = () => {
         for (let i = 0; i < gameboard.getBoard().length; i++) {
             // check if row has matching tokens to middle token compared against left and right token
             // if they all match anyway this will be true
-            let rowHasMatchingTokens = !boardArr[i][horizontalMidPosition].getValue().isEmpty() && boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition + 1] && boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition - 1].getValue();
+            let rowHasMatchingTokens = !boardArr[i][horizontalMidPosition].isEmpty() && boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition + 1] && boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition - 1].getValue();
             if (rowHasMatchingTokens) {
                 return true;
             }
@@ -260,7 +259,7 @@ let humanBotGameController = () => {
         for (let i = 0; i < gameboard.getBoard().length; i++) {
             // check if col has matching tokens to middle token compared against above and below token
             // if they all match anyway this will be true
-            let colHasMatchingTokens = !boardArr[verticalMidPosition][i].getValue().isEmpty() &&  boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition + 1][i].getValue() && boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition - 1][i].getValue()
+            let colHasMatchingTokens = !boardArr[verticalMidPosition][i].isEmpty() &&  boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition + 1][i].getValue() && boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition - 1][i].getValue()
             if (colHasMatchingTokens) {
                 return true;
             }
@@ -309,6 +308,7 @@ let humanBotGameController = () => {
         } else {
             gameResult = `${controller.getActivePlayer().getName()} won the game!`;
         }
+        console.log(gameResult);
     };
 
     return Object.assign({}, controller, { playAllRounds });
