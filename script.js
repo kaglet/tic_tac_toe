@@ -260,11 +260,13 @@ let humanBotGameController = () => {
         for (let i = 0; i < gameboard.getBoard().length; i++) {
             // check if col has matching tokens to middle token compared against above and below token
             // if they all match anyway this will be true
-            let colHasMatchingTokens = !boardArr[i][horizontalMidPosition].getValue().isEmpty() &&  boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition + 1][i].getValue() && boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition - 1][i].getValue()
+            let colHasMatchingTokens = !boardArr[verticalMidPosition][i].getValue().isEmpty() &&  boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition + 1][i].getValue() && boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition - 1][i].getValue()
             if (colHasMatchingTokens) {
                 return true;
             }
         }
+
+        // TODO: check diagonally
 
         return false;
     };
