@@ -263,33 +263,31 @@ let humanBotGameController = () => {
     const playRound = () => {
         if (controller.getActivePlayer().getType() === "human") {
             humanPlays();
-            // check for win before switching turn!
-            checkWin();
+            if(checkWin()) return true;
             controller.switchTurn();
+
             // bot will play with methods assured to be accessible
             botPlays();
-            // check for win before switching turn!
-            checkWin();
+            if(checkWin()) return true;
             controller.switchTurn();
         } else {
             // bot will play with methods assured to be accessible
             botPlays();
-            // check for win before switching turn!
-            checkWin();
+            if(checkWin()) return true;
             controller.switchTurn();
+
             humanPlays();
-            // check for win before switching turn!
-            checkWin();
+            if(checkWin()) return true;
             controller.switchTurn();
         }
     };
 
     const playAllRounds = () => {
-        // rounds can be more than 3 and its until win so we can implement a win checker on the game controller itself, think its the best place
-        const roundNumber = 1;
-        for (let i = 0; i < roundNumber; i++) {
-            playRound();
-        }
+        do { 
+            if (checkNoSpotsLeft()) break;
+        } while (!playRound());
+
+        
     };
 
     return Object.assign({}, controller, { playRound, playAllRounds });
