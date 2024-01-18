@@ -2,7 +2,8 @@
 
 function Cell() {
     let value = "";
-
+    // outside this don't have to care what defines empty/emptiness, it knows inside its own implementation and so it is changed in only one place
+    // his function is therefore useful
     const isEmpty = () => {
         return value === "";
     }
@@ -173,7 +174,7 @@ const gameboard = function () {
     };
 
     const playMove = ({ row, col }, player) => {
-        // returns and continues rest of programming logic is move is not valid whereas it should allow you to try until you have successfully played your move (so a repeat until an undefined is not returned)
+        // Returns and continues rest of programming logic is move is not valid whereas it should allow you to try until you have successfully played your move (so a repeat until an undefined is not returned)
         const isMoveValid = board[row][col].isEmpty();
         if (!isMoveValid) return;
         // To go with the above return true if move played and maybe an optional error message parameter to show in console until a valid message is shown
@@ -183,7 +184,16 @@ const gameboard = function () {
 
     const getBoard = () => board;
 
-    return { printBoard, playMove, getBoard, resetBoard };
+    // The result of row.every is a boolean true or false after its done throughout every cell consolidates the results of the tests.
+    // Same happens when it moves on to board.every to take into the account the returned result of every row.
+    // Note: Be mindful of the documented implementation, with the parameters and the return of the iteration functions.
+    const isBoardFilled = () => board.every(row => {
+        return row.every(cell => {
+            return !cell.isEmpty();
+        });
+    });
+
+    return { printBoard, playMove, getBoard, resetBoard, isBoardFilled };
 }();
 
 // Bundles up functionality that initializes and controls the flow of the overall gameplay session
@@ -209,6 +219,7 @@ const gameplayController = function () {
 
 let humanBotGameController = () => {
     let controller = gameplayController();
+    let gameResult = '';
 
     // extra advantage is I can now easily reorder who plays first
     // who goes first (order controller), only for this checks if current player is human or bot and continues from there (decides order from start)
@@ -283,11 +294,18 @@ let humanBotGameController = () => {
     };
 
     const playAllRounds = () => {
+        // in console game will be suspended while playing out this repeated logic until exiting conditions are met
         do { 
-            if (checkNoSpotsLeft()) break;
+            if (gameboard.isBoardFilled()) break;
         } while (!playRound());
 
-        
+        // after playing all rounds announce game result
+        if (gameboard.isBoardFilled()) {
+            // draw
+            gameResult = 'Draw!';
+        } else {
+            gameResult = `${controller.getActivePlayer().getName()} won the game!`;
+        }
     };
 
     return Object.assign({}, controller, { playRound, playAllRounds });
