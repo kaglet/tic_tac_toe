@@ -47,7 +47,7 @@ function Bot() {
     const playBotMove = () => {
         // eliminate spaces played on
         // play in flattened/reduced cell array by criteria which is by reference so its ok if one of those cells in the 1D array are filled
-        // they correspond to cells in the 3D array
+        // they correspond to cells in the 3D array, yeah you right
 
         /* TODO:
            Reduce array to not show objects but to map them in result availableCells to string of values, same with 3D printing array
@@ -59,6 +59,10 @@ function Bot() {
         let max = availableCells.length - 1;
         randomCellPos = Math.floor(Math.random() * (max - min + 1)) + min;
 
+        // check bot can play move like player
+        // if no available cells then board is filled and will be caught out
+        if (availableCells.length === 0) return;
+        
         availableCells[randomCellPos].writeToken(player.getToken());
     };
 
