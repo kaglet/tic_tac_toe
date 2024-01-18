@@ -59,10 +59,9 @@ function Bot() {
         let max = availableCells.length - 1;
         randomCellPos = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        // check bot can play move like player
-        // if no available cells then board is filled and will be caught out
+        // if no available cells for bot to play on then board is filled and will be caught out
         if (availableCells.length === 0) return;
-        
+
         availableCells[randomCellPos].writeToken(player.getToken());
     };
 
@@ -173,7 +172,9 @@ const gameboard = function () {
         // Take each cell and map to a single value and form a row array and return that
         // Then for each row map it to this new row array to form a new board array
         const valueBoard = board.map(row => row.map(cell => cell.getValue()));
-        console.log(valueBoard);
+        for (let i = 0; i < valueBoard.length; i++) {
+            console.log(`[${valueBoard[i].toString()}]`);
+        }
     };
 
     const playMove = ({ row, col }, player) => {
