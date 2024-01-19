@@ -45,15 +45,9 @@ function Bot() {
 
     // function all bot players can perform is place random move on open spot on board
     const playBotMove = () => {
-        // eliminate spaces played on
-        // play in flattened/reduced cell array by criteria which is by reference so its ok if one of those cells in the 1D array are filled
-        // they correspond to cells in the 3D array, yeah you right
-
-        /* TODO:
-           Reduce array to not show objects but to map them in result availableCells to string of values, same with 3D printing array
-           I want a better format for printing 
-        */
-        let availableCells = gameboard.getBoard().flat().filter(cell => cell.isEmpty()); // Also reduce the dimensionality of the array
+        // reduce dimensionality of array and eliminate cells played on to produce a list of cell objects that have not been played on
+        // objects are assigned by reference so same objects in the 2D array are the same as the ones in this 1D array
+        let availableCells = gameboard.getBoard().flat().filter(cell => cell.isEmpty());
 
         let min = 0;
         let max = availableCells.length - 1;
@@ -110,7 +104,7 @@ const gameSession = function () {
                 break;
         }
 
-        let player2Type = prompt("Choose player 2 type. Enter 'H' for human or 'B' for bot.", 'H');
+        let player2Type = prompt("Choose player 2 type. Enter 'H' for human or 'B' for bot.", 'B');
 
         switch (player2Type) {
             case 'H':
@@ -202,10 +196,13 @@ const gameboard = function () {
 
 // Bundles up functionality that initializes and controls the flow of the overall gameplay session
 const gameplayController = function () {
-    gameSession.createPlayers();
-    let { player1, player2 } = gameSession.getSelectedPlayers();
+    let player1, player2;
+    let activePlayer
 
-    let activePlayer = player1;
+    const setPlayersFromSessionData = () => {
+        ({ player1, player2 } = gameSession.getSelectedPlayers());
+        activePlayer = player1;
+    };
 
     const switchTurn = () => {
         activePlayer = (activePlayer === player1) ? player2 : player1;
@@ -218,11 +215,26 @@ const gameplayController = function () {
 
     const getActivePlayer = () => activePlayer;
 
-    return { switchTurn, getActivePlayer, printRound };
-};
+    return { switchTurn, getActivePlayer, printRound, createPlayers: () => gameSession.createPlayers(), setPlayersFromSessionData };
+}();
 
-let humanBotGameController = () => {
-    let controller = gameplayController();
+let humanBotGameController = (() => {
+    // currently a new gameplay controller is created for each new game and I feel like there could be a better way by simply invoking the methods of the current controller after inheriting them but not auto running some others
+    // for example simply creating the players we can inherit that default function and use it when
+    // for inheritance we always need to create a new object in order to inherit though to assign as a property of the controller
+    // TODO: Ask if there is a better way to do this
+    // Maybe be reassigning controller we throw away the old reference so there is no wasted memory since that is only me speculation
+    // for object inheritance this might the only way
+    // Of course then these children should be single instance still setting and refreshing properties with getters and setters right?
+    // instead of creating a brand new one each time
+    // an object cannot inherit from a module so idk
+    // its returns are available for inheritance though as they are objects so idk what you mean, by exposing themselves as objects and with closure they are like regular objects
+    // just like a factor functions except you can create an object instance multiple times
+    // you can get the object instance but it will still be a new object for the inherited object created via 
+    // possibly set multiple times.
+    // i need to set the returned assigned object with each new reset idk if I can do that
+    // try think how you can set these controllers once because they should be single instance not a new controller per game, just readjust some of your logic and assumptions
+    let controller = gameplayController;
     let gameResult = '';
 
     // extra advantage is I can now easily reorder who plays first
@@ -250,29 +262,36 @@ let humanBotGameController = () => {
     const checkWin = () => {
         let horizontalMidPosition = verticalMidPosition = 1;
         let boardArr = gameboard.getBoard();
-        // check horizontally (across rows)
+        
+        let middleIsNonEmpty;
         for (let i = 0; i < gameboard.getBoard().length; i++) {
-            // check if row has matching tokens to middle token compared against left and right token
-            // if they all match anyway this will be true
-            let rowHasMatchingTokens = !boardArr[i][horizontalMidPosition].isEmpty() && boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition + 1] && boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition - 1].getValue();
+            // check horizontally (across rows)
+            middleIsNonEmpty = !boardArr[i][horizontalMidPosition].isEmpty();
+            let middleEqualsRight = boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition + 1].getValue();
+            let middleEqualsLeft = boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition - 1].getValue();
+            let rowHasMatchingTokens = middleIsNonEmpty && middleEqualsLeft && middleEqualsRight;
             if (rowHasMatchingTokens) {
                 return true;
             }
-        }
 
-        // check vertically (across cols)
-        for (let i = 0; i < gameboard.getBoard().length; i++) {
-            // check if col has matching tokens to middle token compared against above and below token
-            // if they all match anyway this will be true
-            let colHasMatchingTokens = !boardArr[verticalMidPosition][i].isEmpty() &&  boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition + 1][i].getValue() && boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition - 1][i].getValue()
+            // check vertically (across cols)
+            middleIsNonEmpty = !boardArr[verticalMidPosition][i].isEmpty();
+            let middleEqualsUp = boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition - 1][i].getValue();
+            let middleEqualsDown = boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition + 1][i].getValue();
+            let colHasMatchingTokens = middleIsNonEmpty && middleEqualsUp && middleEqualsDown;
             if (colHasMatchingTokens) {
                 return true;
             }
         }
 
-        // TODO: check diagonally
-
-        return false;
+        // check diagonally
+        // check comparison point is not empty to not match based off emptiness
+        middleIsNonEmpty = !boardArr[verticalMidPosition][horizontalMidPosition].isEmpty();
+        let toBottomLeftDiag = boardArr[verticalMidPosition][horizontalMidPosition].getValue() === boardArr[0][2].getValue() && boardArr[verticalMidPosition][horizontalMidPosition].getValue() === boardArr[2][0];
+        let toBottomRightDiag = boardArr[verticalMidPosition][horizontalMidPosition].getValue() === boardArr[0][0].getValue() && boardArr[verticalMidPosition][horizontalMidPosition].getValue() === boardArr[2][2];
+        
+        // return final true or false if the last check fails
+        return toBottomLeftDiag || toBottomRightDiag;
     };
     // Playing a single round will look different across controllers therefore it is not a shared method.
     // A round is defined as two turns taken between P1 and P2.
@@ -280,21 +299,21 @@ let humanBotGameController = () => {
     const playRound = () => {
         if (controller.getActivePlayer().getType() === "human") {
             humanPlays();
-            if(checkWin()) return true;
+            if (checkWin()) return true;
             controller.switchTurn();
 
             // bot will play with methods assured to be accessible
             botPlays();
-            if(checkWin()) return true;
+            if (checkWin()) return true;
             controller.switchTurn();
         } else {
             // bot will play with methods assured to be accessible
             botPlays();
-            if(checkWin()) return true;
+            if (checkWin()) return true;
             controller.switchTurn();
 
             humanPlays();
-            if(checkWin()) return true;
+            if (checkWin()) return true;
             controller.switchTurn();
         }
     };
@@ -302,7 +321,7 @@ let humanBotGameController = () => {
     const playAllRounds = () => {
         // TODO: Try to play all rounds and try a match
         // in console game will be suspended while playing out this repeated logic until exiting conditions are met
-        do { 
+        do {
             if (gameboard.isBoardFilled()) break;
         } while (!playRound());
 
@@ -317,22 +336,37 @@ let humanBotGameController = () => {
     };
 
     return Object.assign({}, controller, { playAllRounds });
-};
+})();
 
-let humanHumanGameController = () => {
-    let controller = gameplayController();
-
-    return Object.assign({}, controller);
-};
-
-let botBotGameController = () => {
-    let controller = gameplayController();
+// execute and return
+let humanHumanGameController = (() => {
+    let controller = gameplayController;
 
     return Object.assign({}, controller);
-};
+})();
 
+let botBotGameController = (() => {
+    let controller = gameplayController;
+
+    return Object.assign({}, controller);
+})();
+
+let sessionExecuter = (() => {
+    // for each session execute these commands
+    const playHumanBotGame = () => {
+        // create players for session
+        humanBotGameController.createPlayers();
+        // set players to be accessible in gameplay session
+        humanBotGameController.setPlayersFromSessionData();
+        humanBotGameController.playAllRounds();
+    }
+
+    return { playHumanBotGame };
+})();
+
+sessionExecuter.playHumanBotGame();
 // Execute human-bot gameplay which is the hardest gameplay case imo, the other cases use subsets of this functionality in repetition. 
 // This is the hardest case of human and bot. For others just use an if statement for whoever the next player type is, its either or.
 // Then choose which function to execute based on the active player type: "player" or "bot". Call this function on the game session itself.
 // The game session is responsible for capturing this information and executing the game after (after the event listeners on the screen controller are pressed I guess). 
-humanBotGameController().playAllRounds();
+
