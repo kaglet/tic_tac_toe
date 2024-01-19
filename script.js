@@ -172,9 +172,13 @@ const gameboard = function () {
         // Returns and continues rest of programming logic is move is not valid whereas TODO: it should allow you to try until you have successfully played your move (so a repeat until an undefined is not returned)
         // TODO: To go with the above return true if move played and maybe an optional error message parameter to show in console until a valid message is shown
         const isMoveValid = board[row][col].isEmpty();
-        if (!isMoveValid) return isMoveValid;
+        if (!isMoveValid) {
+            alert('Move is invalid. Please try again');
+            return false;
+        };
 
         board[row][col].writeToken(player.getToken());
+        return true;
     };
 
     const getBoard = () => board;
@@ -218,12 +222,17 @@ let humanBotGameController = (() => {
     let gameResult = '';
 
     const humanPlays = () => {
+        let row, col;
         console.log(`It is the following player\'s turn: ${controller.getActivePlayer().getName()}`);
-        let row = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
-        let col = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
+        // Repeat play until move is valid (possible)
+        // Play while invalid
+        do {
+            // ask them to enter new input otherwise this will always repeat
+            row = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
+            col = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
+        } while (gameboard.playMove({ row, col }, controller.getActivePlayer()) === false);
 
         console.log(`Placing ${controller.getActivePlayer().getName()}'s token`);
-        gameboard.playMove({ row, col }, controller.getActivePlayer());
         controller.printRound();
     };
 
