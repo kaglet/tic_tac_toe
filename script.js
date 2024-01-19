@@ -286,9 +286,10 @@ let humanBotGameController = (() => {
 
         // check diagonally
         // check comparison point is not empty to not match based off emptiness
-        middleIsNonEmpty = !boardArr[verticalMidPosition][horizontalMidPosition].isEmpty();
-        let toBottomLeftDiag = boardArr[verticalMidPosition][horizontalMidPosition].getValue() === boardArr[0][2].getValue() && boardArr[verticalMidPosition][horizontalMidPosition].getValue() === boardArr[2][0];
-        let toBottomRightDiag = boardArr[verticalMidPosition][horizontalMidPosition].getValue() === boardArr[0][0].getValue() && boardArr[verticalMidPosition][horizontalMidPosition].getValue() === boardArr[2][2];
+        let middleCell = boardArr[verticalMidPosition][horizontalMidPosition];
+        middleIsNonEmpty = !middleCell.isEmpty();
+        let toBottomLeftDiag = middleIsNonEmpty && middleCell.getValue() === boardArr[0][2].getValue() && middleCell.getValue() === boardArr[2][0].getValue();
+        let toBottomRightDiag = middleIsNonEmpty && middleCell.getValue() === boardArr[0][0].getValue() && middleCell.getValue() === boardArr[2][2].getValue();
         
         // return final true or false if the last check fails
         return toBottomLeftDiag || toBottomRightDiag;
@@ -307,6 +308,7 @@ let humanBotGameController = (() => {
             if (checkWin()) return true;
             controller.switchTurn();
         } else {
+            // TODO: Test playthrough with bot going first
             // bot will play with methods assured to be accessible
             botPlays();
             if (checkWin()) return true;
@@ -359,6 +361,8 @@ let sessionExecuter = (() => {
         // set players to be accessible in gameplay session
         humanBotGameController.setPlayersFromSessionData();
         humanBotGameController.playAllRounds();
+
+        // TODO: Reset board through interface provided by this top level controller
     }
 
     return { playHumanBotGame };
