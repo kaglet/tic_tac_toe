@@ -41,7 +41,7 @@ function Bot() {
     let player = Player();
 
     let name = "bot";
-    let type = "bot";
+    let type = "B";
 
     // All bot players can perform this action to place random move on open spot on board
     const playBotMove = () => {
@@ -72,7 +72,7 @@ function Human() {
     let player = Player();
 
     let name = "human";
-    let type = "human";
+    let type = "H";
 
     const getName = () => name;
 
@@ -282,7 +282,7 @@ let humanBotGameController = (() => {
     // A round is defined as two turns taken between P1 and P2.
     // Across rounds this function always works to switch turns properly too.
     const playRound = () => {
-        if (controller.getActivePlayer().getType() === "human") {
+        if (controller.getActivePlayer().getType() === "H") {
             humanPlays();
             if (checkWin()) return true;
             controller.switchTurn();
@@ -336,17 +336,49 @@ let botBotGameController = (() => {
 })();
 
 let sessionExecuter = (() => {
+    const startSession = () => {
+        // create players for session
+        gameSession.createPlayers(); // we don't know its human/bot players before running this but this is the start of a new game and based off this we choose which to run
+        let {player1, player2} = gameSession.getSelectedPlayers();
+        if (player1.getType() === 'H' && player2.getType() === 'H') {
+            playHumanHumanGame();
+        } else if (player1.getType() === 'B' && player2.getType() === 'B') {
+            playBotBotGame();
+        } else if ((player1.getType() === 'H' && player2.getType() === 'B') || (player1.getType() === 'B' && player2.getType() === 'H')) {
+            playHumanBotGame();
+        }
+    };
+
     // for each session execute these commands
     const playHumanBotGame = () => {
-        // create players for session
-        gameSession.createPlayers();
+        // we can just play game from start
         // set players to be accessible in gameplay session
         humanBotGameController.setPlayersFromSessionData();
         humanBotGameController.playAllRounds();
         gameboard.resetBoard();
     }
 
-    return { playHumanBotGame };
+    const playHumanHumanGame = () => {
+        // we can just play game from start
+        // set players to be accessible in gameplay session
+        humanBotGameController.setPlayersFromSessionData();
+        humanBotGameController.playAllRounds();
+        gameboard.resetBoard();
+    }
+
+    const playBotBotGame = () => {
+        // we can just play game from start
+        // set players to be accessible in gameplay session
+        humanBotGameController.setPlayersFromSessionData();
+        humanBotGameController.playAllRounds();
+        gameboard.resetBoard();
+    }
+
+    return { startSession };
 })();
 
-sessionExecuter.playHumanBotGame();
+// Execute multiple sessions
+// Session executer might need to control DOM within sessions otherwise idk another way to do it as I do not see the need to decouple this
+do {
+    sessionExecuter.startSession();
+} while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
