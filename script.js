@@ -212,33 +212,25 @@ const gameplayController = function () {
 
     const getActivePlayer = () => activePlayer;
 
-    return { switchTurn, getActivePlayer, printRound, setPlayersFromSessionData };
-}();
-
-let humanBotGameController = (() => {
-
-    let controller = gameplayController;
-    let gameResult = '';
-
     const humanPlays = () => {
         let row, col;
-        console.log(`It is the following player\'s turn: ${controller.getActivePlayer().getName()}`);
+        console.log(`It is the following player\'s turn: ${getActivePlayer().getName()}`);
         // Repeat play while move is not yet valid
         do {
             // get new input until input results in valid move
             row = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
             col = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
-        } while (gameboard.playMove({ row, col }, controller.getActivePlayer()) === false);
+        } while (gameboard.playMove({ row, col }, getActivePlayer()) === false);
 
-        console.log(`Placing ${controller.getActivePlayer().getName()}'s token`);
-        controller.printRound();
+        console.log(`Placing ${getActivePlayer().getName()}'s token`);
+        printRound();
     };
 
     const botPlays = () => {
-        console.log(`It is the following player\'s turn: ${controller.getActivePlayer().getName()}`);
-        console.log(`Placing ${controller.getActivePlayer().getName()}'s token`);
-        controller.getActivePlayer().playBotMove();
-        controller.printRound();
+        console.log(`It is the following player\'s turn: ${getActivePlayer().getName()}`);
+        console.log(`Placing ${getActivePlayer().getName()}'s token`);
+        getActivePlayer().playBotMove();
+        printRound();
     }
 
     // check if previous move resulted in a winning configuration occurring
@@ -278,28 +270,36 @@ let humanBotGameController = (() => {
         return toBottomLeftDiag || toBottomRightDiag;
     };
 
+    return { switchTurn, getActivePlayer, printRound, setPlayersFromSessionData, humanPlays, botPlays, checkWin };
+}();
+
+let humanBotGameController = (() => {
+
+    let controller = gameplayController;
+    let gameResult = '';
+
     // Playing a single round will look different across controllers therefore it is not a shared method.
     // A round is defined as two turns taken between P1 and P2.
     // Across rounds this function always works to switch turns properly too.
     const playRound = () => {
         if (controller.getActivePlayer().getType() === "H") {
-            humanPlays();
-            if (checkWin()) return true;
+            controller.humanPlays();
+            if (controller.checkWin()) return true;
             controller.switchTurn();
 
             // bot will play with methods assured to be accessible
-            botPlays();
-            if (checkWin()) return true;
+            controller.botPlays();
+            if (controller.checkWin()) return true;
             controller.switchTurn();
         } else {
             // TODO: Test playthrough with bot going first
             // bot will play with methods assured to be accessible
-            botPlays();
-            if (checkWin()) return true;
+            controller.botPlays();
+            if (controller.checkWin()) return true;
             controller.switchTurn();
 
-            humanPlays();
-            if (checkWin()) return true;
+            controller.humanPlays();
+            if (controller.checkWin()) return true;
             controller.switchTurn();
         }
     };
@@ -326,13 +326,62 @@ let humanBotGameController = (() => {
 let humanHumanGameController = (() => {
     let controller = gameplayController;
 
-    return Object.assign({}, controller);
+    const playRound = () => {
+        let turnCount = 2;
+        for (let i = 0; i < turnCount; i++) {
+            controller.humanPlays();
+            if (controller.checkWin()) return true;
+            controller.switchTurn();
+        }
+    };
+
+    const playAllRounds = () => {
+        do {
+            if (gameboard.isBoardFilled()) break;
+        } while (!playRound());
+
+        // after playing all rounds announce game result
+        if (gameboard.isBoardFilled()) {
+            // draw
+            gameResult = 'Draw!';
+        } else {
+            gameResult = `${controller.getActivePlayer().getName()} won the game!`;
+        }
+        console.log(gameResult);
+    };
+
+    return Object.assign({}, controller, { playAllRounds });
 })();
 
 let botBotGameController = (() => {
     let controller = gameplayController;
 
-    return Object.assign({}, controller);
+    const playRound = () => {
+        let turnCount = 2;
+        for (let i = 0; i < turnCount; i++) {
+            controller.botPlays();
+            if (checkWin()) return true;
+            controller.switchTurn();
+        }
+    };
+
+    // this function is composed of the function within this scope so it has to be here not in the above object inherited from
+    const playAllRounds = () => {
+        do {
+            if (gameboard.isBoardFilled()) break;
+        } while (!playRound());
+
+        // after playing all rounds announce game result
+        if (gameboard.isBoardFilled()) {
+            // draw
+            gameResult = 'Draw!';
+        } else {
+            gameResult = `${controller.getActivePlayer().getName()} won the game!`;
+        }
+        console.log(gameResult);
+    };
+
+    return Object.assign({}, controller, { playAllRounds });
 })();
 
 let sessionExecuter = (() => {
@@ -349,7 +398,6 @@ let sessionExecuter = (() => {
         }
     };
 
-    // for each session execute these commands
     const playHumanBotGame = () => {
         // we can just play game from start
         // set players to be accessible in gameplay session
@@ -379,6 +427,7 @@ let sessionExecuter = (() => {
 
 // Execute multiple sessions
 // Session executer might need to control DOM within sessions otherwise idk another way to do it as I do not see the need to decouple this
+// Keep playing until user types no
 do {
     sessionExecuter.startSession();
 } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
