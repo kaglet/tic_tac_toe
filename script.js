@@ -360,7 +360,7 @@ let botBotGameController = (() => {
         let turnCount = 2;
         for (let i = 0; i < turnCount; i++) {
             controller.botPlays();
-            if (checkWin()) return true;
+            if (controller.checkWin()) return true;
             controller.switchTurn();
         }
     };
@@ -402,6 +402,7 @@ let sessionExecuter = (() => {
         // we can just play game from start
         // set players to be accessible in gameplay session
         humanBotGameController.setPlayersFromSessionData();
+        // this function is a property of it by inheritance in Object.assign()
         humanBotGameController.playAllRounds();
         gameboard.resetBoard();
     }
@@ -409,16 +410,16 @@ let sessionExecuter = (() => {
     const playHumanHumanGame = () => {
         // we can just play game from start
         // set players to be accessible in gameplay session
-        humanBotGameController.setPlayersFromSessionData();
-        humanBotGameController.playAllRounds();
+        humanHumanGameController.setPlayersFromSessionData();
+        humanHumanGameController.playAllRounds();
         gameboard.resetBoard();
     }
 
     const playBotBotGame = () => {
         // we can just play game from start
         // set players to be accessible in gameplay session
-        humanBotGameController.setPlayersFromSessionData();
-        humanBotGameController.playAllRounds();
+        botBotGameController.setPlayersFromSessionData();
+        botBotGameController.playAllRounds();
         gameboard.resetBoard();
     }
 
