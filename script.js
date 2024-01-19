@@ -146,6 +146,7 @@ const gameboard = function () {
     const cols = rows = 3;
     board = [];
 
+    // a single final initialization with the cell objects that will always be used
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < cols; j++) {
@@ -169,8 +170,6 @@ const gameboard = function () {
     };
 
     const playMove = ({ row, col }, player) => {
-        // Returns and continues rest of programming logic is move is not valid whereas TODO: it should allow you to try until you have successfully played your move (so a repeat until an undefined is not returned)
-        // TODO: To go with the above return true if move played and maybe an optional error message parameter to show in console until a valid message is shown
         const isMoveValid = board[row][col].isEmpty();
         if (!isMoveValid) {
             alert('Move is invalid. Please try again');
@@ -213,7 +212,7 @@ const gameplayController = function () {
 
     const getActivePlayer = () => activePlayer;
 
-    return { switchTurn, getActivePlayer, printRound, createPlayers: () => gameSession.createPlayers(), setPlayersFromSessionData };
+    return { switchTurn, getActivePlayer, printRound, setPlayersFromSessionData };
 }();
 
 let humanBotGameController = (() => {
@@ -224,10 +223,9 @@ let humanBotGameController = (() => {
     const humanPlays = () => {
         let row, col;
         console.log(`It is the following player\'s turn: ${controller.getActivePlayer().getName()}`);
-        // Repeat play until move is valid (possible)
-        // Play while invalid
+        // Repeat play while move is not yet valid
         do {
-            // ask them to enter new input otherwise this will always repeat
+            // get new input until input results in valid move
             row = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
             col = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
         } while (gameboard.playMove({ row, col }, controller.getActivePlayer()) === false);
@@ -341,12 +339,11 @@ let sessionExecuter = (() => {
     // for each session execute these commands
     const playHumanBotGame = () => {
         // create players for session
-        humanBotGameController.createPlayers();
+        gameSession.createPlayers();
         // set players to be accessible in gameplay session
         humanBotGameController.setPlayersFromSessionData();
         humanBotGameController.playAllRounds();
-
-        // TODO: Reset board through interface provided by this top level controller
+        gameboard.resetBoard();
     }
 
     return { playHumanBotGame };
