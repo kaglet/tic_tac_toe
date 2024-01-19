@@ -355,13 +355,15 @@ let humanHumanGameController = (() => {
 
 let botBotGameController = (() => {
     let controller = gameplayController;
+    // const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
-    const playRound = () => {
+    const playRound = async () => {
         let turnCount = 2;
         for (let i = 0; i < turnCount; i++) {
             controller.botPlays();
             if (controller.checkWin()) return true;
             controller.switchTurn();
+            // await sleep(1000);
         }
     };
 
