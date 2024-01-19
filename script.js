@@ -2,8 +2,8 @@
 
 function Cell() {
     let value = "";
-    // outside this don't have to care what defines empty/emptiness, it knows inside its own implementation and so it is changed in only one place
-    // his function is therefore useful
+    // Outside this function we do not have to care what defines emptiness. Instead it is known inside a cell's own internal implementation.
+    // This therefore only has to be changed in one place for all objects that access this function.
     const isEmpty = () => {
         return value === "";
     }
@@ -43,17 +43,17 @@ function Bot() {
     let name = "bot";
     let type = "bot";
 
-    // function all bot players can perform is place random move on open spot on board
+    // All bot players can perform this action to place random move on open spot on board
     const playBotMove = () => {
-        // reduce dimensionality of array and eliminate cells played on to produce a list of cell objects that have not been played on
-        // objects are assigned by reference so same objects in the 2D array are the same as the ones in this 1D array
+        // Reduce dimensionality of array and eliminate cells played on to produce a list of cell objects that have not been played on
+        // Objects are assigned by reference so same objects in the 2D array are the same as the ones in this 1D array
         let availableCells = gameboard.getBoard().flat().filter(cell => cell.isEmpty());
 
         let min = 0;
         let max = availableCells.length - 1;
         randomCellPos = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        // if no available cells for bot to play on then board is filled and will be caught out
+        // If no available cells for bot to play on then board is filled and will be caught out
         if (availableCells.length === 0) return;
 
         availableCells[randomCellPos].writeToken(player.getToken());
@@ -162,9 +162,6 @@ const gameboard = function () {
     };
 
     const printBoard = () => {
-        // Read right to left as you work with immediately returned/evaluated results of execution
-        // Take each cell and map to a single value and form a row array and return that
-        // Then for each row map it to this new row array to form a new board array
         const valueBoard = board.map(row => row.map(cell => cell.getValue()));
         for (let i = 0; i < valueBoard.length; i++) {
             console.log(`[${valueBoard[i].toString()}]`);
@@ -172,19 +169,16 @@ const gameboard = function () {
     };
 
     const playMove = ({ row, col }, player) => {
-        // Returns and continues rest of programming logic is move is not valid whereas it should allow you to try until you have successfully played your move (so a repeat until an undefined is not returned)
+        // Returns and continues rest of programming logic is move is not valid whereas TODO: it should allow you to try until you have successfully played your move (so a repeat until an undefined is not returned)
+        // TODO: To go with the above return true if move played and maybe an optional error message parameter to show in console until a valid message is shown
         const isMoveValid = board[row][col].isEmpty();
-        if (!isMoveValid) return;
-        // To go with the above return true if move played and maybe an optional error message parameter to show in console until a valid message is shown
+        if (!isMoveValid) return isMoveValid;
 
         board[row][col].writeToken(player.getToken());
     };
 
     const getBoard = () => board;
 
-    // The result of row.every is a boolean true or false after its done throughout every cell consolidates the results of the tests.
-    // Same happens when it moves on to board.every to take into the account the returned result of every row.
-    // Note: Be mindful of the documented implementation, with the parameters and the return of the iteration functions.
     const isBoardFilled = () => board.every(row => {
         return row.every(cell => {
             return !cell.isEmpty();
@@ -219,26 +213,10 @@ const gameplayController = function () {
 }();
 
 let humanBotGameController = (() => {
-    // currently a new gameplay controller is created for each new game and I feel like there could be a better way by simply invoking the methods of the current controller after inheriting them but not auto running some others
-    // for example simply creating the players we can inherit that default function and use it when
-    // for inheritance we always need to create a new object in order to inherit though to assign as a property of the controller
-    // TODO: Ask if there is a better way to do this
-    // Maybe be reassigning controller we throw away the old reference so there is no wasted memory since that is only me speculation
-    // for object inheritance this might the only way
-    // Of course then these children should be single instance still setting and refreshing properties with getters and setters right?
-    // instead of creating a brand new one each time
-    // an object cannot inherit from a module so idk
-    // its returns are available for inheritance though as they are objects so idk what you mean, by exposing themselves as objects and with closure they are like regular objects
-    // just like a factor functions except you can create an object instance multiple times
-    // you can get the object instance but it will still be a new object for the inherited object created via 
-    // possibly set multiple times.
-    // i need to set the returned assigned object with each new reset idk if I can do that
-    // try think how you can set these controllers once because they should be single instance not a new controller per game, just readjust some of your logic and assumptions
+
     let controller = gameplayController;
     let gameResult = '';
 
-    // extra advantage is I can now easily reorder who plays first
-    // who goes first (order controller), only for this checks if current player is human or bot and continues from there (decides order from start)
     const humanPlays = () => {
         console.log(`It is the following player\'s turn: ${controller.getActivePlayer().getName()}`);
         let row = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
@@ -249,8 +227,6 @@ let humanBotGameController = (() => {
         controller.printRound();
     };
 
-    // Bot move will play but not by selecting a row and col but rather writing into an empty cell then calling print
-    // If the object is for a bot then this method will be available, it should not be an assumption but enforced and ensured in code
     const botPlays = () => {
         console.log(`It is the following player\'s turn: ${controller.getActivePlayer().getName()}`);
         console.log(`Placing ${controller.getActivePlayer().getName()}'s token`);
@@ -294,6 +270,7 @@ let humanBotGameController = (() => {
         // return final true or false if the last check fails
         return toBottomLeftDiag || toBottomRightDiag;
     };
+
     // Playing a single round will look different across controllers therefore it is not a shared method.
     // A round is defined as two turns taken between P1 and P2.
     // Across rounds this function always works to switch turns properly too.
@@ -321,8 +298,6 @@ let humanBotGameController = (() => {
     };
 
     const playAllRounds = () => {
-        // TODO: Try to play all rounds and try a match
-        // in console game will be suspended while playing out this repeated logic until exiting conditions are met
         do {
             if (gameboard.isBoardFilled()) break;
         } while (!playRound());
@@ -369,8 +344,3 @@ let sessionExecuter = (() => {
 })();
 
 sessionExecuter.playHumanBotGame();
-// Execute human-bot gameplay which is the hardest gameplay case imo, the other cases use subsets of this functionality in repetition. 
-// This is the hardest case of human and bot. For others just use an if statement for whoever the next player type is, its either or.
-// Then choose which function to execute based on the active player type: "player" or "bot". Call this function on the game session itself.
-// The game session is responsible for capturing this information and executing the game after (after the event listeners on the screen controller are pressed I guess). 
-
