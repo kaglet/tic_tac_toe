@@ -355,7 +355,7 @@ let humanHumanGameController = (() => {
 
 let botBotGameController = (() => {
     let controller = gameplayController;
-    // const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+    
 
     const playRound = () => {
         let turnCount = 2;
@@ -363,7 +363,6 @@ let botBotGameController = (() => {
             controller.botPlays();
             if (controller.checkWin()) return true;
             controller.switchTurn();
-            // await sleep(1000);
         }
     };
 
@@ -428,9 +427,16 @@ let sessionExecuter = (() => {
     return { startSession };
 })();
 
+let displayController = (() => {
+    
+
+
+    do {
+        sessionExecuter.startSession();
+    } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
+})();
+
 // Execute multiple sessions
 // Session executer might need to control DOM within sessions otherwise idk another way to do it as I do not see the need to decouple this
 // Keep playing until user types no
-do {
-    sessionExecuter.startSession();
-} while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
+
