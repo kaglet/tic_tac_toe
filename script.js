@@ -357,7 +357,7 @@ let botBotGameController = (() => {
     let controller = gameplayController;
     // const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
-    const playRound = async () => {
+    const playRound = () => {
         let turnCount = 2;
         for (let i = 0; i < turnCount; i++) {
             controller.botPlays();
