@@ -428,9 +428,32 @@ let sessionExecuter = (() => {
 })();
 
 let displayController = (() => {
+    let player1Type;
+    let player1Name;
+    let player1Symbol;
+
+    let player2Type;
+    let player2Name;
+    let player2Symbol;  
     
+    // for now get info from there as is already done, get data from display controller next time if needed though (you can compose them in different ways as long as you use high level functions in object (module) they belong)
+    const storePlayerInfo = () => {
+        // don't set it immediately here and couple with the code for the game session, just return it to there and continue as normal to make code maintainable
+        player1Type = document.querySelector('.player.1.type').value;
+        player1Name = document.querySelector('.player.1.name').value;
+        player1Symbol = document.querySelector('.player.1.symbol').value;
 
+        player2Type = document.querySelector('.player.2.type').value;
+        player2Name = document.querySelector('.player.2.name').value;
+        player2Symbol = document.querySelector('.player.2.symbol').value;    
+    };
 
+    const getPlayerInfo = () => {
+        let player1Info = {player1Type, player1Name, player1Symbol};
+        let player2Info = {player2Type, player2Name, player2Symbol};
+        return {player1Info, player2Info};
+    }
+    
     do {
         sessionExecuter.startSession();
     } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
