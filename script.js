@@ -474,14 +474,14 @@ let displayController = (() => {
                 cellButton.textContent = cell.getValue();
                 boardDiv.appendChild(cellButton);
             })
-        })
+        });
     };
-};
+})();
 
 do {
     sessionExecuter.startSession();
 } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
-}) ();
+
 
 // Execute multiple sessions
 // Session executer might need to control DOM within sessions otherwise idk another way to do it as I do not see the need to decouple this
