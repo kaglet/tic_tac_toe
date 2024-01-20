@@ -237,7 +237,7 @@ const gameplayController = function () {
     const checkWin = () => {
         let horizontalMidPosition = verticalMidPosition = 1;
         let boardArr = gameboard.getBoard();
-        
+
         let middleIsNonEmpty;
         for (let i = 0; i < gameboard.getBoard().length; i++) {
             // check horizontally (across rows)
@@ -265,7 +265,7 @@ const gameplayController = function () {
         middleIsNonEmpty = !middleCell.isEmpty();
         let toBottomLeftDiag = middleIsNonEmpty && middleCell.getValue() === boardArr[0][2].getValue() && middleCell.getValue() === boardArr[2][0].getValue();
         let toBottomRightDiag = middleIsNonEmpty && middleCell.getValue() === boardArr[0][0].getValue() && middleCell.getValue() === boardArr[2][2].getValue();
-        
+
         // return final true or false if the last check fails
         return toBottomLeftDiag || toBottomRightDiag;
     };
@@ -355,7 +355,7 @@ let humanHumanGameController = (() => {
 
 let botBotGameController = (() => {
     let controller = gameplayController;
-    
+
 
     const playRound = () => {
         let turnCount = 2;
@@ -389,7 +389,7 @@ let sessionExecuter = (() => {
     const startSession = () => {
         // create players for session
         gameSession.createPlayers(); // we don't know its human/bot players before running this but this is the start of a new game and based off this we choose which to run
-        let {player1, player2} = gameSession.getSelectedPlayers();
+        let { player1, player2 } = gameSession.getSelectedPlayers();
         if (player1.getType() === 'H' && player2.getType() === 'H') {
             playHumanHumanGame();
         } else if (player1.getType() === 'B' && player2.getType() === 'B') {
@@ -434,30 +434,54 @@ let displayController = (() => {
 
     let player2Type;
     let player2Name;
-    let player2Symbol;  
-    
+    let player2Symbol;
+
     // for now get info from there as is already done, get data from display controller next time if needed though (you can compose them in different ways as long as you use high level functions in object (module) they belong)
     const storePlayerInfo = () => {
-        // don't set it immediately here and couple with the code for the game session, just return it to there and continue as normal to make code maintainable
+        // don't set player data immediately here and couple with the code for the game session, just return it to there and continue as normal to make code maintainable
+        // game session controls data storage here the UI is simply providing a service, its own
         player1Type = document.querySelector('.player.1.type').value;
         player1Name = document.querySelector('.player.1.name').value;
         player1Symbol = document.querySelector('.player.1.symbol').value;
 
         player2Type = document.querySelector('.player.2.type').value;
         player2Name = document.querySelector('.player.2.name').value;
-        player2Symbol = document.querySelector('.player.2.symbol').value;    
+        player2Symbol = document.querySelector('.player.2.symbol').value;
     };
 
     const getPlayerInfo = () => {
-        let player1Info = {player1Type, player1Name, player1Symbol};
-        let player2Info = {player2Type, player2Name, player2Symbol};
-        return {player1Info, player2Info};
-    }
-    
-    do {
-        sessionExecuter.startSession();
-    } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
-})();
+        let player1Info = { player1Type, player1Name, player1Symbol };
+        let player2Info = { player2Type, player2Name, player2Symbol };
+        return { player1Info, player2Info };
+    };
+
+    const updateDisplay = () => {
+        let turnDisplay = document.querySelector('.turn');
+        let boardDisplay = document.querySelector('.board');
+
+        let board = gameboard.getBoard();
+        turnDisplay.textContent = `${gameplayController.getActivePlayer().getName()}'s turn!`;
+
+        // TODO: For each cell already there in the board display, just update its value don't rerender new objects
+        // Render board squares
+        board.forEach(row => {
+            row.forEach((cell, index) => {
+                const cellButton = document.createElement("button");
+                cellButton.classList.add("cell");
+                // Create a data attribute to identify the column
+                // This makes it easier to pass into our `playRound` function 
+                cellButton.dataset.column = index
+                cellButton.textContent = cell.getValue();
+                boardDiv.appendChild(cellButton);
+            })
+        })
+    };
+};
+
+do {
+    sessionExecuter.startSession();
+} while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
+}) ();
 
 // Execute multiple sessions
 // Session executer might need to control DOM within sessions otherwise idk another way to do it as I do not see the need to decouple this
