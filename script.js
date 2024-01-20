@@ -436,6 +436,8 @@ let displayController = (() => {
     let player2Name;
     let player2Symbol;
 
+    let boardDisplay = document.querySelector('.board');
+
     // for now get info from there as is already done, get data from display controller next time if needed though (you can compose them in different ways as long as you use high level functions in object (module) they belong)
     const storePlayerInfo = () => {
         // don't set player data immediately here and couple with the code for the game session, just return it to there and continue as normal to make code maintainable
@@ -457,30 +459,41 @@ let displayController = (() => {
 
     const updateDisplay = () => {
         let turnDisplay = document.querySelector('.turn');
-        let boardDisplay = document.querySelector('.board');
 
         let board = gameboard.getBoard();
         turnDisplay.textContent = `${gameplayController.getActivePlayer().getName()}'s turn!`;
 
         // TODO: For each cell already there in the board display, just update its value don't rerender new objects
         // Render board squares
-        board.forEach(row => {
-            row.forEach((cell, index) => {
+        board.forEach((row, i) => {
+            row.forEach((cell, j) => {
                 const cellButton = document.createElement("button");
                 cellButton.classList.add("cell");
                 // Create a data attribute to identify the column
                 // This makes it easier to pass into our `playRound` function 
-                cellButton.dataset.column = index
+                cellButton.dataset.row = i;
+                cellButton.dataset.column = j;
                 cellButton.textContent = cell.getValue();
-                boardDiv.appendChild(cellButton);
+                boardDisplay.appendChild(cellButton);
             })
         });
     };
+
+    const handleBoardClicks = (e) => {
+        const selectedColumn = e.target.dataset.column;
+        const selectedRow = e.target.dataset.row;
+
+        if (!selectedColumn || !selectedRow) return;
+
+        do {
+            sessionExecuter.startSession();
+        } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
+    };
+
+    boardDisplay.addEventListener('click', handleBoardClicks);
 })();
 
-do {
-    sessionExecuter.startSession();
-} while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
+
 
 
 // Execute multiple sessions
