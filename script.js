@@ -90,8 +90,12 @@ const gameSession = function () {
     let player1, player2;
 
     // TODO: Input player choice parameters to define players for the session here
+
+    // When you create players get the info from the DOM service not as a parameters, that is what making it restrictive means, it doesn't mean exchange of info between services is not possible
+    // then it needs something from the outside and its not closed to itself for other services that access it too
+    // parameters to provide data are unnecessary when you have services from other objects to provide data
     const createPlayers = () => {
-        let player1Type = prompt("Choose player 1 type. Enter 'H' for human or 'B' for bot.", 'H');
+        let player1Type = displayController.getPlayerInfo().player1Info().type;
 
         switch (player1Type) {
             case 'H':
@@ -104,7 +108,7 @@ const gameSession = function () {
                 break;
         }
 
-        let player2Type = prompt("Choose player 2 type. Enter 'H' for human or 'B' for bot.", 'B');
+        let player2Type = displayController.getPlayerInfo().player2Info().type;
 
         switch (player2Type) {
             case 'H':
@@ -116,23 +120,12 @@ const gameSession = function () {
             default:
                 break;
         }
+        
+        player1.setName(displayController.getPlayerInfo().player1Info().name);
+        player2.setName(displayController.getPlayerInfo().player2Info().name);
 
-        if (player1Type === 'H' && player2Type === 'H') {
-            player1.setName('Player 1');
-            player2.setName('Player 2');
-        } else if (player1Type === 'H' && player2Type === 'B') {
-            player1.setName('You');
-            player2.setName('Bot');
-        } else if (player1Type === 'B' && player2Type === 'H') {
-            player1.setName('Bot');
-            player2.setName('You');
-        } else if (player1Type === 'B' && player2Type === 'B') {
-            player1.setName('Bot 1');
-            player2.setName('Bot 2');
-        }
-
-        player1.chooseToken('X');
-        player2.chooseToken('O');
+        player1.chooseToken(displayController.getPlayerInfo().player1Info().symbol);
+        player2.chooseToken(displayController.getPlayerInfo().player2Info().symbol);
     };
 
     const getSelectedPlayers = () => {
@@ -454,8 +447,8 @@ let displayController = (() => {
     };
 
     const getPlayerInfo = () => {
-        let player1Info = { player1Type, player1Name, player1Symbol };
-        let player2Info = { player2Type, player2Name, player2Symbol };
+        let player1Info = { type: player1Type, name: player1Name, symbol: player1Symbol };
+        let player2Info = { type: player2Type, name: player2Name, symbol: player2Symbol };
         return { player1Info, player2Info };
     };
 
@@ -501,8 +494,21 @@ let displayController = (() => {
 
     // don't add this here I think but within session code
     boardDisplay.addEventListener('click', handleBoardClicks);
+
+    //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object)
+    // it's out of sync the event listeners but its ok, once this, only then can the other thing happen and that is how order is enforced so the next desired thing happens, only after this happens on this click
+    let playButton = document.querySelector('.play');
+    playButton.addEventListener('click', () => {
+        storePlayerInfo();
+        // TODO: Implement this
+        hideForm();
+    });
+
+    // on click play round and do other stuff, can't be coupled together though has to be a unique service where DOM just reads and sends info to objects
+    return {getPlayerInfo, updateDisplay, handleBoardClicks};
 })();
 
+// it's fine to be used in other objects controlling other things in this case because the data has to be obtained and passed from the controller to elsewhere permanent storage then used by other objects
 
 
 
