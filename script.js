@@ -386,8 +386,10 @@ let botBotGameController = (() => {
 })();
 
 let sessionExecuter = (() => {
+    // the different modules can extract data from the DOM services provided by the displayController
+    // then get data from game session where its really permanently stored and decoupled from the impermanent and volatile DOM that only displays data and is reliable for nothing else
     const startSession = () => {
-        // create players for session
+        // TODO: create players for session extracted/read from DOM for actual storage in the game session so nothing changes
         gameSession.createPlayers(); // we don't know its human/bot players before running this but this is the start of a new game and based off this we choose which to run
         let { player1, player2 } = gameSession.getSelectedPlayers();
         if (player1.getType() === 'H' && player2.getType() === 'H') {
@@ -484,12 +486,20 @@ let displayController = (() => {
         const selectedRow = e.target.dataset.row;
 
         if (!selectedColumn || !selectedRow) return;
-
-        do {
-            sessionExecuter.startSession();
-        } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
     };
 
+    // do above functions in order
+
+    // execute an entire session with DOM control inside i.e. providing its services
+    // controls flow automatically but I think it needs to be slightly different or in start session it controls disappearing of that form once trigger clicked and continues with the rest of the stuff
+    // within sessionExecuter use DOM however you need to now to provide input, it's ok as long as you use an object's services however, coherently as you'd like
+    // my worry was objects feeding back into each other to use each others services, they are still isolating but its not one way
+    // it is restrictive for the display controller but its services are still used inevitably later
+    do { // do this entire process hopefully with event listeners, as this DOM has nothing to do with the logic but running it from DOM if there is a trigger (like a click) or starting the process running without a trigger from the start unlike in the connectfour article
+        sessionExecuter.startSession();
+    } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
+
+    // don't add this here I think but within session code
     boardDisplay.addEventListener('click', handleBoardClicks);
 })();
 
@@ -500,3 +510,11 @@ let displayController = (() => {
 // Session executer might need to control DOM within sessions otherwise idk another way to do it as I do not see the need to decouple this
 // Keep playing until user types no
 
+// TODO: When starting a session we extract data so we still have some objects interact with DOM as per usual at the start
+
+// Instead of an artificial play round last thing I need now is a human triggered play round based on the listeners. So it won't play round immediately, but the method will be tagged to always be available to move it forward until the end, no longer a predetermined momentum in any place
+// I don't know because they didn't have a play all rounds, but why did I have it, to advance turns until a win condition in the gameboard data representation is detected
+// Answer is he DOESN'T actually play it, not once, and not multiple rounds so I don't know how he would've encapsulated that. SO maybe encapsulate play round trigger, maybe he left it untriggered except for testing.
+// But maybe just do as he did and wait to use play round on event listener and carry on from there. I do not want to throw away the enclosing play rounds or session executer though. I don't think you have to.
+// in controlling the flow of the game I still have to play rounds and play the bot move after that (the player's move, so there is still a pattern of play and turn taking per players even with event listeners in how they are activated and deactivated, they controller can switch turns after every click in DOM making it automatically the next person's turn after the previous turn or input placing) and let it reflect in the DOM by using the DOM service
+// There must be an equivalent for input placing then switch turn in our game except it is just input from console not from DOM, we should be able to tag the listener in somehow
