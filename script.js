@@ -278,7 +278,7 @@ const gameplayController = function () {
 
 let humanBotGameController = (() => {
     let controller = gameplayController;
-    
+
     const playRound = () => {
         // start event listener with human playing before bot can then play
         controller.humanPlays();
@@ -326,40 +326,19 @@ let humanHumanGameController = (() => {
 
     const playRound = () => {
         // start event listener with human playing before bot can then play
-        controller.humanPlays();
-        let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
-        if (isGameTerminableWithResult) {
-            controller.endGame();
-            return;
-        };
-        controller.switchTurn();
-
-        // bot will play with methods assured to be accessible
-        controller.botPlays();
-        
-        if (isGameTerminableWithResult) {
-            controller.endGame();
-            return;
-        };
-        controller.switchTurn();
+        for (let i = 0; i < 2; i++) {
+            controller.humanPlays();
+            let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
+            if (isGameTerminableWithResult) {
+                controller.endGame();
+                return;
+            };
+            controller.switchTurn();
+        }
     };
 
     const playAllRounds = () => {
-        // do this playing each round until board is filled but through event listener loop
-        // get initial player then play from there
-        // bot plays first then momentum is as normal we may just interject the "round" we are on
-        if (controller.getActivePlayer().getType() === "H") {
-            // on click do the following
-            displayController.getBoardUI().addEventListener('click', playRound);
-        } else {
-            // unprompted not triggered by fulfillment of a previous action but call to play next round
-            // bot will play with methods assured to be accessible
-            // do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
-            controller.botPlays();
-            controller.switchTurn();
-
-            displayController.getBoardUI().addEventListener('click', playRound);
-        }
+        displayController.getBoardUI().addEventListener('click', playRound);
     };
 
     return Object.assign({}, controller, { playAllRounds });
