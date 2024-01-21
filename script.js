@@ -285,18 +285,24 @@ let humanBotGameController = (() => {
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
             controller.endGame();
+            // show final move
+            displayController.updateDisplay();
             return;
         };
         controller.switchTurn();
+        displayController.updateDisplay();
 
         // bot will play with methods assured to be accessible
         controller.botPlays();
-        
+
         if (isGameTerminableWithResult) {
             controller.endGame();
+            // show final move
+            displayController.updateDisplay();
             return;
         };
         controller.switchTurn();
+        displayController.updateDisplay();
     };
 
     const playAllRounds = () => {
@@ -326,14 +332,19 @@ let humanHumanGameController = (() => {
 
     const playRound = () => {
         // start event listener with human playing before bot can then play
-        for (let i = 0; i < 2; i++) {
+        const turnCount = 2;
+        for (let i = 0; i < turnCount; i++) {
             controller.humanPlays();
             let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
             if (isGameTerminableWithResult) {
                 controller.endGame();
+                // show final move
+                displayController.updateDisplay();
                 return;
             };
             controller.switchTurn();
+            // make play then update screen with new player's turn after old player played
+            displayController.updateDisplay();
         }
     };
 
@@ -347,9 +358,14 @@ let humanHumanGameController = (() => {
 let botBotGameController = (() => {
     let controller = gameplayController;
 
+    // bot move will reflect in DOM on update screen, that's how it goes once it goes into storage for board changes it reflects
     const playRound = () => {
-        controller.botPlays();
-        controller.switchTurn();
+        const turnCount = 2;
+        for (let i = 0; i < turnCount; i++) {
+            controller.botPlays();
+            controller.switchTurn();
+            displayController.updateDisplay();
+        }
     };
 
     const playAllRounds = () => {
@@ -357,6 +373,10 @@ let botBotGameController = (() => {
         do {
             playRound();
         } while (!isGameTerminableWithResult);
+
+        controller.endGame();        
+        // show final move
+        displayController.updateDisplay();
     };
 
     return Object.assign({}, controller, { playAllRounds });
@@ -472,7 +492,7 @@ let displayController = (() => {
     };
 
     const getCapturedPlayerInput = () => {
-        return {col: humanPlayerColInput, row: humanPlayerRowInput}
+        return { col: humanPlayerColInput, row: humanPlayerRowInput }
     };
 
     // do above functions in order
