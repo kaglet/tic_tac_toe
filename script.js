@@ -89,8 +89,6 @@ function Human() {
 const gameSession = function () {
     let player1, player2;
 
-    // TODO: Input player choice parameters to define players for the session here
-
     // When you create players get the info from the DOM service not as a parameters, that is what making it restrictive means, it doesn't mean exchange of info between services is not possible
     // then it needs something from the outside and its not closed to itself for other services that access it too
     // parameters to provide data are unnecessary when you have services from other objects to provide data
@@ -120,7 +118,7 @@ const gameSession = function () {
             default:
                 break;
         }
-        
+
         player1.setName(displayController.getPlayerInfo().player1Info().name);
         player2.setName(displayController.getPlayerInfo().player2Info().name);
 
@@ -206,14 +204,12 @@ const gameplayController = function () {
     const getActivePlayer = () => activePlayer;
 
     const humanPlays = () => {
-        let row, col;
+        // get data from store just entered on click and call human plays after so I don't have to get through too many parameter passes
+        let row = row = displayController.getCapturedPlayerInput().row;
+        let col = row = displayController.getCapturedPlayerInput().col;
         console.log(`It is the following player\'s turn: ${getActivePlayer().getName()}`);
-        // Repeat play while move is not yet valid
-        do {
-            // get new input until input results in valid move
-            row = +prompt("Enter row number to place token (numbering starts from 1).", '1') - 1;
-            col = +prompt("Enter col number to place token (numbering starts from 1).", '1') - 1;
-        } while (gameboard.playMove({ row, col }, getActivePlayer()) === false);
+
+        if (gameboard.playMove({ row, col }, getActivePlayer()) === false) return false;
 
         console.log(`Placing ${getActivePlayer().getName()}'s token`);
         printRound();
@@ -290,7 +286,8 @@ let humanBotGameController = (() => {
             controller.botPlays();
             if (controller.checkWin()) return true;
             controller.switchTurn();
-
+            // TODO: update state of DOM with service method after each move
+            // Luckily these are all universal service methods of the controller so however they do it and the services they use, will be united across controllers
             controller.humanPlays();
             if (controller.checkWin()) return true;
             controller.switchTurn();
