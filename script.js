@@ -259,20 +259,6 @@ const gameplayController = function () {
         return toBottomLeftDiag || toBottomRightDiag;
     };
 
-    return { switchTurn, getActivePlayer, printRound, setPlayersFromSessionData, humanPlays, botPlays, checkWin };
-}();
-
-let humanBotGameController = (() => {
-
-    let controller = gameplayController;
-    // Handle logic of winner which should be stored somewhere, here it is in game result
-    // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
-    // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
-    let gameResult = '';
-
-    // Playing a single round will look different across controllers therefore it is not a shared method.
-    // A round is defined as two turns taken between P1 and P2.
-    // Across rounds this function always works to switch turns properly too.
     const endGame = () => {
         displayController.getBoardUI.removeEventListener('click', playRoundUntilBoardIsFilled);
         // display game result
@@ -287,6 +273,17 @@ let humanBotGameController = (() => {
         // terminate any other logic to terminate game i.e. terminate playRounds like if any other person was to play next, just need to ensure this play rounds function is terminated and it is since event listener is removed and next form of logic won't be played yet I assume though it should be enforced in code that later shit does not occur
     };
 
+    return { switchTurn, getActivePlayer, printRound, setPlayersFromSessionData, humanPlays, botPlays, checkWin, endGame };
+}();
+
+let humanBotGameController = (() => {
+
+    let controller = gameplayController;
+    // Handle logic of winner which should be stored somewhere, here it is in game result
+    // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
+    // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
+    let gameResult = '';
+
     const playRoundUntilBoardIsFilled = () => {
         playRound();
     };
@@ -294,16 +291,18 @@ let humanBotGameController = (() => {
     const playRound = () => {
         // start event listener with human playing before bot can then play
         controller.humanPlays();
-        if (controller.checkWin() || gameboard.isBoardFilled()) {
-            endGame();
+        let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
+        if (isGameTerminableWithResult) {
+            controller.endGame();
             return;
         };
         controller.switchTurn();
 
         // bot will play with methods assured to be accessible
         controller.botPlays();
-        if (controller.checkWin() || gameboard.isBoardFilled()) {
-            endGame();
+        
+        if (isGameTerminableWithResult) {
+            controller.endGame();
             return;
         };
         controller.switchTurn();
