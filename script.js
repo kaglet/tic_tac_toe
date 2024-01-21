@@ -278,11 +278,7 @@ const gameplayController = function () {
 
 let humanBotGameController = (() => {
     let controller = gameplayController;
-    // Handle logic of winner which should be stored somewhere, here it is in game result
-    // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
-    // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
-    let gameResult = '';
-
+    
     const playRound = () => {
         // start event listener with human playing before bot can then play
         controller.humanPlays();
@@ -327,10 +323,6 @@ let humanBotGameController = (() => {
 // execute or just initialize functions for use later and return
 let humanHumanGameController = (() => {
     let controller = gameplayController;
-    // Handle logic of winner which should be stored somewhere, here it is in game result
-    // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
-    // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
-    let gameResult = '';
 
     const playRound = () => {
         // start event listener with human playing before bot can then play
@@ -375,24 +367,17 @@ let humanHumanGameController = (() => {
 
 let botBotGameController = (() => {
     let controller = gameplayController;
-    // Handle logic of winner which should be stored somewhere, here it is in game result
-    // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
-    // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
-    let gameResult = '';
 
     const playRound = () => {
-        // bot will play with methods assured to be accessible
         controller.botPlays();
-        
-        if (isGameTerminableWithResult) {
-            controller.endGame();
-            return;
-        };
         controller.switchTurn();
     };
 
     const playAllRounds = () => {
-        playRound();
+        let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
+        do {
+            playRound();
+        } while (!isGameTerminableWithResult);
     };
 
     return Object.assign({}, controller, { playAllRounds });
