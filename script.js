@@ -260,7 +260,7 @@ const gameplayController = function () {
     };
 
     const endGame = () => {
-        displayController.getBoardUI.removeEventListener('click', playRoundUntilBoardIsFilled);
+        displayController.getBoardUI.removeEventListener('click', playRound);
         // display game result
         // after playing all rounds announce game result
         if (gameboard.isBoardFilled()) {
@@ -277,16 +277,11 @@ const gameplayController = function () {
 }();
 
 let humanBotGameController = (() => {
-
     let controller = gameplayController;
     // Handle logic of winner which should be stored somewhere, here it is in game result
     // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
     // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
     let gameResult = '';
-
-    const playRoundUntilBoardIsFilled = () => {
-        playRound();
-    };
 
     const playRound = () => {
         // start event listener with human playing before bot can then play
@@ -314,7 +309,7 @@ let humanBotGameController = (() => {
         // bot plays first then momentum is as normal we may just interject the "round" we are on
         if (controller.getActivePlayer().getType() === "H") {
             // on click do the following
-            displayController.getBoardUI().addEventListener('click', playRoundUntilBoardIsFilled);
+            displayController.getBoardUI().addEventListener('click', playRound);
         } else {
             // unprompted not triggered by fulfillment of a previous action but call to play next round
             // bot will play with methods assured to be accessible
@@ -322,39 +317,57 @@ let humanBotGameController = (() => {
             controller.botPlays();
             controller.switchTurn();
 
-            displayController.getBoardUI().addEventListener('click', playRoundUntilBoardIsFilled);
+            displayController.getBoardUI().addEventListener('click', playRound);
         }
     };
 
     return Object.assign({}, controller, { playAllRounds });
 })();
 
-// execute and return
+// execute or just initialize functions for use later and return
 let humanHumanGameController = (() => {
     let controller = gameplayController;
+    // Handle logic of winner which should be stored somewhere, here it is in game result
+    // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
+    // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
+    let gameResult = '';
 
     const playRound = () => {
-        let turnCount = 2;
-        for (let i = 0; i < turnCount; i++) {
-            controller.humanPlays();
-            if (controller.checkWin()) return true;
-            controller.switchTurn();
-        }
+        // start event listener with human playing before bot can then play
+        controller.humanPlays();
+        let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
+        if (isGameTerminableWithResult) {
+            controller.endGame();
+            return;
+        };
+        controller.switchTurn();
+
+        // bot will play with methods assured to be accessible
+        controller.botPlays();
+        
+        if (isGameTerminableWithResult) {
+            controller.endGame();
+            return;
+        };
+        controller.switchTurn();
     };
 
     const playAllRounds = () => {
-        do {
-            if (gameboard.isBoardFilled()) break;
-        } while (!playRound());
-
-        // after playing all rounds announce game result
-        if (gameboard.isBoardFilled()) {
-            // draw
-            gameResult = 'Draw!';
+        // do this playing each round until board is filled but through event listener loop
+        // get initial player then play from there
+        // bot plays first then momentum is as normal we may just interject the "round" we are on
+        if (controller.getActivePlayer().getType() === "H") {
+            // on click do the following
+            displayController.getBoardUI().addEventListener('click', playRound);
         } else {
-            gameResult = `${controller.getActivePlayer().getName()} won the game!`;
+            // unprompted not triggered by fulfillment of a previous action but call to play next round
+            // bot will play with methods assured to be accessible
+            // do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
+            controller.botPlays();
+            controller.switchTurn();
+
+            displayController.getBoardUI().addEventListener('click', playRound);
         }
-        console.log(gameResult);
     };
 
     return Object.assign({}, controller, { playAllRounds });
@@ -362,31 +375,24 @@ let humanHumanGameController = (() => {
 
 let botBotGameController = (() => {
     let controller = gameplayController;
-
+    // Handle logic of winner which should be stored somewhere, here it is in game result
+    // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
+    // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
+    let gameResult = '';
 
     const playRound = () => {
-        let turnCount = 2;
-        for (let i = 0; i < turnCount; i++) {
-            controller.botPlays();
-            if (controller.checkWin()) return true;
-            controller.switchTurn();
-        }
+        // bot will play with methods assured to be accessible
+        controller.botPlays();
+        
+        if (isGameTerminableWithResult) {
+            controller.endGame();
+            return;
+        };
+        controller.switchTurn();
     };
 
-    // this function is composed of the function within this scope so it has to be here not in the above object inherited from
     const playAllRounds = () => {
-        do {
-            if (gameboard.isBoardFilled()) break;
-        } while (!playRound());
-
-        // after playing all rounds announce game result
-        if (gameboard.isBoardFilled()) {
-            // draw
-            gameResult = 'Draw!';
-        } else {
-            gameResult = `${controller.getActivePlayer().getName()} won the game!`;
-        }
-        console.log(gameResult);
+        playRound();
     };
 
     return Object.assign({}, controller, { playAllRounds });
