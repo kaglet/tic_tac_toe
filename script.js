@@ -296,6 +296,7 @@ let humanBotGameController = (() => {
         controller.humanPlays();
         if (controller.checkWin() || gameboard.isBoardFilled()) {
             endGame();
+            return;
         };
         controller.switchTurn();
 
@@ -303,6 +304,7 @@ let humanBotGameController = (() => {
         controller.botPlays();
         if (controller.checkWin() || gameboard.isBoardFilled()) {
             endGame();
+            return;
         };
         controller.switchTurn();
     };
