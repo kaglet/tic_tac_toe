@@ -205,8 +205,8 @@ const gameplayController = function () {
 
     const humanPlays = () => {
         // get data from store just entered on click and call human plays after so I don't have to get through too many parameter passes
-        let row = row = displayController.getCapturedPlayerInput().row;
-        let col = row = displayController.getCapturedPlayerInput().col;
+        let row = displayController.getCapturedPlayerInput().row;
+        let col = displayController.getCapturedPlayerInput().col;
         console.log(`It is the following player\'s turn: ${getActivePlayer().getName()}`);
 
         if (gameboard.playMove({ row, col }, getActivePlayer()) === false) return false;
@@ -265,6 +265,9 @@ const gameplayController = function () {
 let humanBotGameController = (() => {
 
     let controller = gameplayController;
+    // Handle logic of winner which should be stored somewhere, here it is in game result
+    // This should be made accessible to obtain to display in DOM or call the service to display it in DOM since DOM wouldn't know when to access or when a round is over, only internally does the play round function know
+    // when called it just knows to call the get game result but it should not be passed absolutely anything as a parameter
     let gameResult = '';
 
     // Playing a single round will look different across controllers therefore it is not a shared method.
@@ -320,9 +323,6 @@ let humanBotGameController = (() => {
 
             displayController.getBoardUI().addEventListener('click', playRoundUntilBoardIsFilled);
         }
-
-        // TODO: Handle logic of winner which should be stored somewhere else
-        // Done. It is stored in the game result. 
     };
 
     return Object.assign({}, controller, { playAllRounds });
@@ -445,6 +445,8 @@ let displayController = (() => {
     let player2Name;
     let player2Symbol;
 
+    let humanPlayerRowInput, humanPlayerColInput;
+
     let boardDisplay = document.querySelector('.board');
 
     // for now get info from there as is already done, get data from display controller next time if needed though (you can compose them in different ways as long as you use high level functions in object (module) they belong)
@@ -488,11 +490,18 @@ let displayController = (() => {
         });
     };
 
-    const handleBoardClicks = (e) => {
+    const storePlayerInput = (e) => {
         const selectedColumn = e.target.dataset.column;
         const selectedRow = e.target.dataset.row;
 
         if (!selectedColumn || !selectedRow) return;
+
+        humanPlayerRowInput = selectedRow;
+        humanPlayerColInput = selectedColumn;
+    };
+
+    const getCapturedPlayerInput = () => {
+        return {col: humanPlayerColInput, row: humanPlayerRowInput}
     };
 
     // do above functions in order
@@ -521,7 +530,7 @@ let displayController = (() => {
     const getBoardUI = () => boardDisplay;
 
     // on click play round and do other stuff, can't be coupled together though has to be a unique service where DOM just reads and sends info to objects
-    return { getPlayerInfo, updateDisplay, handleBoardClicks, getBoardUI };
+    return { getPlayerInfo, updateDisplay, handleBoardClicks, getBoardUI, getCapturedPlayerInput };
 })();
 
 // it's fine to be used in other objects controlling other things in this case because the data has to be obtained and passed from the controller to elsewhere permanent storage then used by other objects
