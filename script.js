@@ -270,31 +270,45 @@ let humanBotGameController = (() => {
     // Playing a single round will look different across controllers therefore it is not a shared method.
     // A round is defined as two turns taken between P1 and P2.
     // Across rounds this function always works to switch turns properly too.
-    const playRound = () => {
-        if (controller.getActivePlayer().getType() === "H") {
-            controller.humanPlays();
-            if (controller.checkWin()) return true;
-            controller.switchTurn();
-
-            // bot will play with methods assured to be accessible
-            controller.botPlays();
-            if (controller.checkWin()) return true;
-            controller.switchTurn();
-        } else {
-            // TODO: Test playthrough with bot going first
-            // bot will play with methods assured to be accessible
-            controller.botPlays();
-            if (controller.checkWin()) return true;
-            controller.switchTurn();
-            // TODO: update state of DOM with service method after each move
-            // Luckily these are all universal service methods of the controller so however they do it and the services they use, will be united across controllers
-            controller.humanPlays();
-            if (controller.checkWin()) return true;
-            controller.switchTurn();
+    const playRoundUntilBoardIsFilled = () => {
+        playRound();
+        if (gameboard.isBoardFilled()) {
+            displayController.getBoardUI().removeEventListener('click', playRoundUntilBoardIsFilled);
         }
+    };
+    
+    const playRound = () => {
+        // start event listener with human playing before bot can then play
+        controller.humanPlays();
+        if (controller.checkWin()) return true;
+        controller.switchTurn();
+
+        // bot will play with methods assured to be accessible
+        controller.botPlays();
+        if (controller.checkWin()) return true;
+        controller.switchTurn();
     };
 
     const playAllRounds = () => {
+        // do this playing each round until board is filled but through event listener loop
+        // get initial player then play from there
+        // bot plays first then momentum is as normal we may just interject the "round" we are on
+        if (controller.getActivePlayer().getType() === "H") {
+            // on click do the following
+            displayController.getBoardUI().addEventListener('click', playRoundUntilBoardIsFilled);
+        } else {
+            // unprompted not triggered by fulfillment of a previous action but call to play next round
+            // bot will play with methods assured to be accessible
+            // do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
+            controller.botPlays();
+            if (controller.checkWin()) return true;
+            controller.switchTurn();
+
+            displayController.getBoardUI().addEventListener('click', playRoundUntilBoardIsFilled);
+        }
+
+        // TODO: Handle logic of winner which should be stored somewhere else
+
         do {
             if (gameboard.isBoardFilled()) break;
         } while (!playRound());
@@ -396,9 +410,10 @@ let sessionExecuter = (() => {
         // set players to be accessible in gameplay session
         humanBotGameController.setPlayersFromSessionData();
         // this function is a property of it by inheritance in Object.assign()
+        /* to play all rounds do it via the set event listener I'd say but not here no need to dig out the functionality from the function*/
         humanBotGameController.playAllRounds();
         gameboard.resetBoard();
-    }
+    };
 
     const playHumanHumanGame = () => {
         // we can just play game from start
@@ -406,7 +421,7 @@ let sessionExecuter = (() => {
         humanHumanGameController.setPlayersFromSessionData();
         humanHumanGameController.playAllRounds();
         gameboard.resetBoard();
-    }
+    };
 
     const playBotBotGame = () => {
         // we can just play game from start
@@ -414,7 +429,7 @@ let sessionExecuter = (() => {
         botBotGameController.setPlayersFromSessionData();
         botBotGameController.playAllRounds();
         gameboard.resetBoard();
-    }
+    };
 
     return { startSession };
 })();
@@ -501,8 +516,10 @@ let displayController = (() => {
         hideForm();
     });
 
+    const getBoardUI = () => boardDisplay;
+
     // on click play round and do other stuff, can't be coupled together though has to be a unique service where DOM just reads and sends info to objects
-    return {getPlayerInfo, updateDisplay, handleBoardClicks};
+    return { getPlayerInfo, updateDisplay, handleBoardClicks, getBoardUI };
 })();
 
 // it's fine to be used in other objects controlling other things in this case because the data has to be obtained and passed from the controller to elsewhere permanent storage then used by other objects
