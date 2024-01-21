@@ -270,22 +270,37 @@ let humanBotGameController = (() => {
     // Playing a single round will look different across controllers therefore it is not a shared method.
     // A round is defined as two turns taken between P1 and P2.
     // Across rounds this function always works to switch turns properly too.
+    const endGame = () => {
+        displayController.getBoardUI.removeEventListener('click', playRoundUntilBoardIsFilled);
+        // display game result
+        // after playing all rounds announce game result
+        if (gameboard.isBoardFilled()) {
+            // draw
+            gameResult = 'Draw!';
+        } else {
+            gameResult = `${controller.getActivePlayer().getName()} won the game!`;
+        }
+        console.log(gameResult);
+        // terminate any other logic to terminate game i.e. terminate playRounds like if any other person was to play next, just need to ensure this play rounds function is terminated and it is since event listener is removed and next form of logic won't be played yet I assume though it should be enforced in code that later shit does not occur
+    };
+
     const playRoundUntilBoardIsFilled = () => {
         playRound();
-        if (gameboard.isBoardFilled()) {
-            displayController.getBoardUI().removeEventListener('click', playRoundUntilBoardIsFilled);
-        }
     };
-    
+
     const playRound = () => {
         // start event listener with human playing before bot can then play
         controller.humanPlays();
-        if (controller.checkWin()) return true;
+        if (controller.checkWin() || gameboard.isBoardFilled()) {
+            endGame();
+        };
         controller.switchTurn();
 
         // bot will play with methods assured to be accessible
         controller.botPlays();
-        if (controller.checkWin()) return true;
+        if (controller.checkWin() || gameboard.isBoardFilled()) {
+            endGame();
+        };
         controller.switchTurn();
     };
 
@@ -301,26 +316,13 @@ let humanBotGameController = (() => {
             // bot will play with methods assured to be accessible
             // do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
             controller.botPlays();
-            if (controller.checkWin()) return true;
             controller.switchTurn();
 
             displayController.getBoardUI().addEventListener('click', playRoundUntilBoardIsFilled);
         }
 
         // TODO: Handle logic of winner which should be stored somewhere else
-
-        do {
-            if (gameboard.isBoardFilled()) break;
-        } while (!playRound());
-
-        // after playing all rounds announce game result
-        if (gameboard.isBoardFilled()) {
-            // draw
-            gameResult = 'Draw!';
-        } else {
-            gameResult = `${controller.getActivePlayer().getName()} won the game!`;
-        }
-        console.log(gameResult);
+        // Done. It is stored in the game result. 
     };
 
     return Object.assign({}, controller, { playAllRounds });
