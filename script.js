@@ -465,8 +465,12 @@ let displayController = (() => {
         let board = gameboard.getBoard();
         turnDisplay.textContent = `${gameplayController.getActivePlayer().getName()}'s turn!`;
 
+        while (boardDisplay.firstChild) {
+            boardDisplay.removeChild(boardDisplay.lastChild);
+        }
+
         // TODO: For each cell already there in the board display, just update its value don't rerender new objects
-        // Render board squares
+        // Have initial board creation and render of permanent UI board that is not to be changed
         board.forEach((row, i) => {
             row.forEach((cell, j) => {
                 const cellButton = document.createElement("button");
