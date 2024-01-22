@@ -261,14 +261,13 @@ const gameplayController = function () {
     };
 
     const endGame = () => {
-        displayController.getBoardUI.removeEventListener('click', playRound);
         // display game result
         // after playing all rounds announce game result
         if (gameboard.isBoardFilled()) {
             // draw
             gameResult = 'Draw!';
         } else {
-            gameResult = `${controller.getActivePlayer().getName()} won the game!`;
+            gameResult = `${getActivePlayer().getName()} won the game!`;
         }
         console.log(gameResult);
         // terminate any other logic to terminate game i.e. terminate playRounds like if any other person was to play next, just need to ensure this play rounds function is terminated and it is since event listener is removed and next form of logic won't be played yet I assume though it should be enforced in code that later shit does not occur
@@ -284,6 +283,7 @@ let humanBotGameController = (() => {
         controller.humanPlays(e);
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
+            displayController.getBoardUI().removeEventListener('click', playRound);
             controller.endGame();
             // show final move
             displayController.updateDisplay();
@@ -295,6 +295,7 @@ let humanBotGameController = (() => {
         controller.botPlays();
 
         if (isGameTerminableWithResult) {
+            displayController.getBoardUI().removeEventListener('click', playRound);
             controller.endGame();
             // show final move with active player unchanged and not switched yet
             displayController.updateDisplay();
@@ -330,6 +331,7 @@ let humanHumanGameController = (() => {
             controller.humanPlays(e);
             let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
             if (isGameTerminableWithResult) {
+                displayController.getBoardUI().removeEventListener('click', playRound);
                 controller.endGame();
                 // show final move
                 displayController.updateDisplay();
@@ -367,6 +369,7 @@ let botBotGameController = (() => {
             playRound();
         } while (!isGameTerminableWithResult);
 
+        displayController.getBoardUI().removeEventListener('click', playRound);
         controller.endGame();        
         // show final move
         displayController.updateDisplay();
