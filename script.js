@@ -542,5 +542,5 @@ let displayController = (() => {
     const getBoardUI = () => boardDisplay;
 
     // on click play round and do other stuff, can't be coupled together though has to be a unique service where DOM just reads and sends info to objects
-    return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm };
+    return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput };
 })();
