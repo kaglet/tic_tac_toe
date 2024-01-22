@@ -203,8 +203,8 @@ const gameplayController = function () {
 
     const getActivePlayer = () => activePlayer;
 
-    const humanPlays = () => {
-        displayController.storePlayerInput();
+    const humanPlays = (e) => {
+        displayController.storePlayerInput(e);
         // get data from store just entered on click and call human plays after so I don't have to get through too many parameter passes
         let row = displayController.getCapturedPlayerInput().row;
         let col = displayController.getCapturedPlayerInput().col;
@@ -280,8 +280,8 @@ const gameplayController = function () {
 let humanBotGameController = (() => {
     let controller = gameplayController;
 
-    const playRound = () => {
-        controller.humanPlays();
+    const playRound = (e) => {
+        controller.humanPlays(e);
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
             controller.endGame();
@@ -306,14 +306,14 @@ let humanBotGameController = (() => {
 
     const playAllRounds = () => {
         if (controller.getActivePlayer().getType() === "H") {
-            displayController.getBoardUI().addEventListener('click', playRound);
+            displayController.getBoardUI().addEventListener('click', (e) => playRound(e));
         } else {
             // Unprompted and not triggered by fulfillment of a previous action
             // Do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
             controller.botPlays();
             controller.switchTurn();
 
-            displayController.getBoardUI().addEventListener('click', playRound);
+            displayController.getBoardUI().addEventListener('click', (e) => playRound(e));
         }
     };
 
@@ -327,7 +327,7 @@ let humanHumanGameController = (() => {
     const playRound = () => {
         const turnCount = 2;
         for (let i = 0; i < turnCount; i++) {
-            controller.humanPlays();
+            controller.humanPlays(e);
             let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
             if (isGameTerminableWithResult) {
                 controller.endGame();
@@ -342,7 +342,7 @@ let humanHumanGameController = (() => {
     };
 
     const playAllRounds = () => {
-        displayController.getBoardUI().addEventListener('click', playRound);
+        displayController.getBoardUI().addEventListener('click', (e) => playRound(e));
     };
 
     return Object.assign({}, controller, { playAllRounds });
@@ -474,9 +474,9 @@ let displayController = (() => {
         });
     };
 
-    const storePlayerInput = (e) => {
-        const selectedColumn = e.target.dataset.column;
-        const selectedRow = e.target.dataset.row;
+    const storePlayerInput = (event) => {
+        const selectedColumn = event.target.dataset.column;
+        const selectedRow = event.target.dataset.row;
 
         if (!selectedColumn || !selectedRow) return;
 
