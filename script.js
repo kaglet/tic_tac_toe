@@ -379,6 +379,8 @@ let sessionExecuter = (() => {
     // the different modules can extract temporary visual data from the DOM services provided by the displayController
     // then get data from game session where its really permanently stored and decoupled from the impermanent and volatile DOM that only displays data and is reliable for nothing else
     const startSession = () => {
+        // make sure gameboard is reset from previous round
+        gameboard.resetBoard();
         // TODO: create players for session extracted/read from DOM for actual storage in the game session so nothing changes (simply one object via its services feeds to another object that was already used via its services)
         gameSession.createPlayers(); // we don't know its human/bot players before running this but this is the start of a new game and based off this we choose which to run
         let { player1, player2 } = gameSession.getSelectedPlayers();
@@ -397,7 +399,6 @@ let sessionExecuter = (() => {
         humanBotGameController.setPlayersFromSessionData();
         displayController.updateDisplay();
         humanBotGameController.playAllRounds();
-        gameboard.resetBoard();
     };
 
     const playHumanHumanGame = () => {
@@ -406,7 +407,6 @@ let sessionExecuter = (() => {
         humanHumanGameController.setPlayersFromSessionData();
         displayController.updateDisplay();
         humanHumanGameController.playAllRounds();
-        gameboard.resetBoard();
     };
 
     const playBotBotGame = () => {
@@ -415,7 +415,6 @@ let sessionExecuter = (() => {
         botBotGameController.setPlayersFromSessionData();
         displayController.updateDisplay();
         botBotGameController.playAllRounds();
-        gameboard.resetBoard();
     };
 
     return { startSession };
