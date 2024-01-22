@@ -260,7 +260,8 @@ const gameplayController = function () {
         return toBottomLeftDiag || toBottomRightDiag;
     };
 
-    const endGame = () => {
+    const endGame = (playRound) => {
+        displayController.getBoardUI().removeEventListener('click', playRound);
         // display game result
         // after playing all rounds announce game result
         if (gameboard.isBoardFilled()) {
@@ -283,8 +284,7 @@ let humanBotGameController = (() => {
         controller.humanPlays(e);
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
-            displayController.getBoardUI().removeEventListener('click', playRound);
-            controller.endGame();
+            controller.endGame(playRound);
             // show final move
             displayController.updateDisplay();
             return;
@@ -295,8 +295,7 @@ let humanBotGameController = (() => {
         controller.botPlays();
 
         if (isGameTerminableWithResult) {
-            displayController.getBoardUI().removeEventListener('click', playRound);
-            controller.endGame();
+            controller.endGame(playRound);
             // show final move with active player unchanged and not switched yet
             displayController.updateDisplay();
             return;
@@ -331,8 +330,7 @@ let humanHumanGameController = (() => {
             controller.humanPlays(e);
             let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
             if (isGameTerminableWithResult) {
-                displayController.getBoardUI().removeEventListener('click', playRound);
-                controller.endGame();
+                controller.endGame(playRound);
                 // show final move
                 displayController.updateDisplay();
                 return;
@@ -369,8 +367,7 @@ let botBotGameController = (() => {
             playRound();
         } while (!isGameTerminableWithResult);
 
-        displayController.getBoardUI().removeEventListener('click', playRound);
-        controller.endGame();        
+        controller.endGame(playRound);        
         // show final move
         displayController.updateDisplay();
     };
