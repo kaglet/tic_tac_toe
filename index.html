@@ -10,7 +10,75 @@
 
 <body>
     <form action="" class="players-info">
-        
+        <section class="player 1">
+            <fieldset>
+                <legend>Choose Type</legend>
+                <ul>
+                    <li>
+                        <input type="radio" name="type" id="p1-human">
+                        <label for="p1-human">Human</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="type" id="p1-bot">
+                        <label for="p1-bot">Bot</label>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <fieldset>
+                <legend>Choose Token</legend>
+                <ul>
+                    <li>
+                        <input type="radio" name="token" id="p1-x">
+                        <label for="p1-x">X</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="" id="p1-o">
+                        <label for="p1-o">O</label>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <div class="name">
+                <label for="p1-name">Enter Player Name:</label>
+                <input type="text" name="p1-name" id="p1-name" placeholder="For example: Player 1 / Human / Bot / Chris">
+            </div>
+        </section>
+
+        <section class="player 2">
+            <fieldset>
+                <legend>Choose Type</legend>
+                <ul>
+                    <li>
+                        <input type="radio" name="type" id="p2-human">
+                        <label for="p2-human">Human</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="type" id="p2-bot">
+                        <label for="p2-bot">Bot</label>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <fieldset>
+                <legend>Choose Token</legend>
+                <ul>
+                    <li>
+                        <input type="radio" name="token" id="p2-x">
+                        <label for="p2-x">X</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="" id="p2-o">
+                        <label for="p2-o">O</label>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <div class="name">
+                <label for="p2-name">Enter Player Name:</label>
+                <input type="text" name="p2-name" id="p2-name" placeholder="For example: Player 2 / Human / Bot / Chris">
+            </div>
+        </section>
     </form>
     <h1 class="turn"></h1>
     <div class="board"></div>
