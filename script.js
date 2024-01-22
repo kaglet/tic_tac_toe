@@ -261,7 +261,7 @@ const gameplayController = function () {
     };
 
     const endGame = () => {
-        displayController.getBoardUI.removeEventListener('click', playRound);
+        displayController.getBoardUI.removeEventListener('click', removablePlayRound);
         // display game result
         // after playing all rounds announce game result
         if (gameboard.isBoardFilled()) {
@@ -279,6 +279,10 @@ const gameplayController = function () {
 
 let humanBotGameController = (() => {
     let controller = gameplayController;
+
+    const removablePlayRound = () => {
+        (e) => playRound(e);
+    };
 
     const playRound = (e) => {
         controller.humanPlays(e);
@@ -306,7 +310,7 @@ let humanBotGameController = (() => {
 
     const playAllRounds = () => {
         if (controller.getActivePlayer().getType() === "H") {
-            displayController.getBoardUI().addEventListener('click', (e) => playRound(e));
+            displayController.getBoardUI().addEventListener('click', );
         } else {
             // Unprompted and not triggered by fulfillment of a previous action
             // Do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
