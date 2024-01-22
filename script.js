@@ -93,7 +93,7 @@ const gameSession = function () {
     // then it needs something from the outside and its not closed to itself for other services that access it too
     // parameters to provide data are unnecessary when you have services from other objects to provide data
     const createPlayers = () => {
-        let player1Type = displayController.getPlayerInfo().player1Info().type;
+        let player1Type = displayController.getPlayerInfo().player1Info.type;
 
         switch (player1Type) {
             case 'H':
@@ -106,7 +106,7 @@ const gameSession = function () {
                 break;
         }
 
-        let player2Type = displayController.getPlayerInfo().player2Info().type;
+        let player2Type = displayController.getPlayerInfo().player2Info.type;
 
         switch (player2Type) {
             case 'H':
@@ -119,11 +119,11 @@ const gameSession = function () {
                 break;
         }
 
-        player1.setName(displayController.getPlayerInfo().player1Info().name);
-        player2.setName(displayController.getPlayerInfo().player2Info().name);
+        player1.setName(displayController.getPlayerInfo().player1Info.name);
+        player2.setName(displayController.getPlayerInfo().player2Info.name);
 
-        player1.chooseToken(displayController.getPlayerInfo().player1Info().symbol);
-        player2.chooseToken(displayController.getPlayerInfo().player2Info().symbol);
+        player1.chooseToken(displayController.getPlayerInfo().player1Info.symbol);
+        player2.chooseToken(displayController.getPlayerInfo().player2Info.symbol);
     };
 
     const getSelectedPlayers = () => {
@@ -436,13 +436,13 @@ let displayController = (() => {
     // for now get info from there as is already done, get data from display controller next time if needed though (you can compose them in different ways as long as you use high level functions in object (module) they belong)
     // store player from DOM for later retrieval
     const storePlayerInfo = () => {
-        player1Type = document.querySelector('.player.1.type').value;
-        player1Name = document.querySelector('.player.1.name').value;
-        player1Symbol = document.querySelector('.player.1.symbol').value;
+        player1Type = document.querySelector('[name="p1-type"]').value;
+        player1Name = document.querySelector('#p1-name').value;
+        player1Symbol = document.querySelector('[name="p1-token"]').value;
 
-        player2Type = document.querySelector('.player.2.type').value;
-        player2Name = document.querySelector('.player.2.name').value;
-        player2Symbol = document.querySelector('.player.2.symbol').value;
+        player2Type = document.querySelector('[name="p2-type"]').value;
+        player2Name = document.querySelector('#p2-name').value;
+        player2Symbol = document.querySelector('[name="p2-token"]').value;
     };
 
     const getPlayerInfo = () => {
