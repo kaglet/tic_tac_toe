@@ -306,14 +306,14 @@ let humanBotGameController = (() => {
 
     const playAllRounds = () => {
         if (controller.getActivePlayer().getType() === "H") {
-            displayController.getBoardUI().addEventListener('click', (e) => playRound(e));
+            displayController.getBoardUI().addEventListener('click', playRound);
         } else {
             // Unprompted and not triggered by fulfillment of a previous action
             // Do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
             controller.botPlays();
             controller.switchTurn();
 
-            displayController.getBoardUI().addEventListener('click', (e) => playRound(e));
+            displayController.getBoardUI().addEventListener('click', playRound);
         }
     };
 
@@ -342,7 +342,7 @@ let humanHumanGameController = (() => {
     };
 
     const playAllRounds = () => {
-        displayController.getBoardUI().addEventListener('click', (e) => playRound(e));
+        displayController.getBoardUI().addEventListener('click', playRound);
     };
 
     return Object.assign({}, controller, { playAllRounds });
