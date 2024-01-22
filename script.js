@@ -395,6 +395,7 @@ let sessionExecuter = (() => {
         // we can just play game from start
         // set players in session to be accessible for this gameplay session
         humanBotGameController.setPlayersFromSessionData();
+        displayController.updateDisplay();
         humanBotGameController.playAllRounds();
         gameboard.resetBoard();
     };
@@ -403,6 +404,7 @@ let sessionExecuter = (() => {
         // we can just play game from start
         // set players in session to be accessible for this gameplay session
         humanHumanGameController.setPlayersFromSessionData();
+        displayController.updateDisplay();
         humanHumanGameController.playAllRounds();
         gameboard.resetBoard();
     };
@@ -411,6 +413,7 @@ let sessionExecuter = (() => {
         // we can just play game from start
         // set players in session to be accessible for this gameplay session
         botBotGameController.setPlayersFromSessionData();
+        displayController.updateDisplay();
         botBotGameController.playAllRounds();
         gameboard.resetBoard();
     };
@@ -507,7 +510,7 @@ let displayController = (() => {
     const showBoard = () => {
         let board = document.querySelector('.board');
         // make form invisible
-        board.style.display = 'block';
+        board.style.display = 'grid';
     };
 
     const hideBoard = () => {

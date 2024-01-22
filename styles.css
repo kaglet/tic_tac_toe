@@ -6,17 +6,15 @@
 
 .board {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr;
-    grid-auto-rows: 1fr;
-    height: 500px;
-    width: 500px;
+    width: fit-content;
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: repeat(3, auto);
     background-color: chartreuse;
-    gap: 2rem;
+    gap: 0.2rem;
 }
 
 .board button {
     background-color: white;
-    width: 100%;
-    height: 100%;
+    width: 50px;
+    height: 50px;
 }
