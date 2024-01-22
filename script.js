@@ -504,16 +504,30 @@ let displayController = (() => {
         form.style.display = 'none';
     };
 
+    const showBoard = () => {
+        let board = document.querySelector('.board');
+        // make form invisible
+        board.style.display = 'block';
+    };
+
+    const hideBoard = () => {
+        let board = document.querySelector('.board');
+        // make form invisible
+        board.style.display = 'none';
+    };
+
     //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object) or can use the storage of another service since this just controls UI
     playButton.addEventListener('click', () => {
         storePlayerInfo();
         // TODO: Implement this
         hideForm();
+        showBoard();
         sessionExecuter.startSession();
     });
 
     replayButton.addEventListener('click', () => {
         showForm();
+        hideBoard();
         // TODO: Optionally show form with previously entered details
         // play button click will start it all again
     });

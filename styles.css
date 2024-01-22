@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-auto-rows: 1fr;
+    height: 500px;
+    width: 500px;
+    background-color: chartreuse;
+    gap: 2rem;
+}
+
+.board button {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+}
