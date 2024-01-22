@@ -497,9 +497,6 @@ let displayController = (() => {
         // make form invisible
     };
 
-    // don't add this here I think but within session code
-    boardDisplay.addEventListener('click', handleBoardClicks);
-
     //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object) or can use the storage of another service since this just controls UI
     playButton.addEventListener('click', () => {
         storePlayerInfo();
