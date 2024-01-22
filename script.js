@@ -437,13 +437,13 @@ let displayController = (() => {
     // for now get info from there as is already done, get data from display controller next time if needed though (you can compose them in different ways as long as you use high level functions in object (module) they belong)
     // store player from DOM for later retrieval
     const storePlayerInfo = () => {
-        player1Type = document.querySelector('[name="p1-type"]').value;
+        player1Type = document.querySelector('#p1-human').checked ? document.querySelector('#p1-human').value : document.querySelector('#p1-bot').value;
         player1Name = document.querySelector('#p1-name').value;
-        player1Symbol = document.querySelector('[name="p1-token"]').value;
+        player1Symbol = document.querySelector('#p1-x').checked ? document.querySelector('#p1-x').value : document.querySelector('#p1-o').value;
 
-        player2Type = document.querySelector('[name="p2-type"]').value;
+        player2Type = document.querySelector('#p2-human').checked ? document.querySelector('#p2-human').value : document.querySelector('#p2-bot').value;
         player2Name = document.querySelector('#p2-name').value;
-        player2Symbol = document.querySelector('[name="p2-token"]').value;
+        player2Symbol = document.querySelector('#p2-x').checked ? document.querySelector('#p2-x').value : document.querySelector('#p2-o').value;
     };
 
     const getPlayerInfo = () => {
