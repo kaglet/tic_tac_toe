@@ -516,20 +516,3 @@ let displayController = (() => {
     // on click play round and do other stuff, can't be coupled together though has to be a unique service where DOM just reads and sends info to objects
     return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm };
 })();
-
-// it's fine to be used in other objects controlling other things in this case because the data has to be obtained and passed from the controller to elsewhere permanent storage then used by other objects
-
-
-
-// Execute multiple sessions
-// Session executer might need to control DOM within sessions otherwise idk another way to do it as I do not see the need to decouple this
-// Keep playing until user types no
-
-// TODO: When starting a session we extract data so we still have some objects interact with DOM as per usual at the start
-
-// Instead of an artificial play round last thing I need now is a human triggered play round based on the listeners. So it won't play round immediately, but the method will be tagged to always be available to move it forward until the end, no longer a predetermined momentum in any place
-// I don't know because they didn't have a play all rounds, but why did I have it, to advance turns until a win condition in the gameboard data representation is detected
-// Answer is he DOESN'T actually play it, not once, and not multiple rounds so I don't know how he would've encapsulated that. SO maybe encapsulate play round trigger, maybe he left it untriggered except for testing.
-// But maybe just do as he did and wait to use play round on event listener and carry on from there. I do not want to throw away the enclosing play rounds or session executer though. I don't think you have to.
-// in controlling the flow of the game I still have to play rounds and play the bot move after that (the player's move, so there is still a pattern of play and turn taking per players even with event listeners in how they are activated and deactivated, they controller can switch turns after every click in DOM making it automatically the next person's turn after the previous turn or input placing) and let it reflect in the DOM by using the DOM service
-// There must be an equivalent for input placing then switch turn in our game except it is just input from console not from DOM, we should be able to tag the listener in somehow
