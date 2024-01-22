@@ -356,16 +356,20 @@ let botBotGameController = (() => {
         const turnCount = 2;
         for (let i = 0; i < turnCount; i++) {
             controller.botPlays();
+            // TODO: mark winner player to know who's name to display and it is not dependent on the functionality of the active player
+            let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
+            if (isGameTerminableWithResult) {
+                return true;
+            }
             controller.switchTurn();
             displayController.updateDisplay();
         }
     };
 
     const playAllRounds = () => {
-        let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
+        
         do {
-            playRound();
-        } while (!isGameTerminableWithResult);
+        } while (!playRound());
 
         controller.endGame(playRound);        
         // show final move
