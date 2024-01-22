@@ -487,17 +487,25 @@ let displayController = (() => {
         return { col: humanPlayerColInput, row: humanPlayerRowInput }
     };
 
+    const showForm = () => {
+        let form = document.querySelector('form.players-info');
+        // make form visible
+    };
+
+    const hideForm = () => {
+        let form = document.querySelector('form.players-info');
+        // make form invisible
+    };
+
     // don't add this here I think but within session code
     boardDisplay.addEventListener('click', handleBoardClicks);
 
-    //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object)
-    // it's out of sync the event listeners but its ok, once this, only then can the other thing happen and that is how order is enforced so the next desired thing happens, only after this happens on this click
-
+    //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object) or can use the storage of another service since this just controls UI
     playButton.addEventListener('click', () => {
         storePlayerInfo();
         // TODO: Implement this
         hideForm();
-        startSession();
+        sessionExecuter.startSession();
     });
 
     replayButton.addEventListener('click', () => {
@@ -509,7 +517,7 @@ let displayController = (() => {
     const getBoardUI = () => boardDisplay;
 
     // on click play round and do other stuff, can't be coupled together though has to be a unique service where DOM just reads and sends info to objects
-    return { getPlayerInfo, updateDisplay, handleBoardClicks, getBoardUI, getCapturedPlayerInput };
+    return { getPlayerInfo, updateDisplay, handleBoardClicks, getBoardUI, getCapturedPlayerInput, showForm };
 })();
 
 // it's fine to be used in other objects controlling other things in this case because the data has to be obtained and passed from the controller to elsewhere permanent storage then used by other objects
