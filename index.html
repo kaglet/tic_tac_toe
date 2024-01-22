@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic-Tac-Toe</title>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </head>
 
 <body>
     <form action="" class="players-info">
+        <h2>Player 1</h2>
         <section class="player 1">
             <fieldset>
                 <legend>Choose Type</legend>
@@ -46,6 +47,7 @@
         </section>
 
         <section class="player 2">
+            <h2>Player 2</h2>
             <fieldset>
                 <legend>Choose Type</legend>
                 <ul>
@@ -79,9 +81,18 @@
                 <input type="text" name="p2-name" id="p2-name" placeholder="For example: Player 2 / Human / Bot / Chris">
             </div>
         </section>
+
+        <button type="button" class="play">
+            Play
+        </button>
     </form>
+
+    <!-- add replay dialogue modal -->
+
     <h1 class="turn"></h1>
-    <div class="board"></div>
+    <div class="board">
+
+    </div>
 </body>
 
 </html>
