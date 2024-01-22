@@ -280,7 +280,6 @@ let humanBotGameController = (() => {
     let controller = gameplayController;
 
     const playRound = () => {
-        // start event listener with human playing before bot can then play
         controller.humanPlays();
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
@@ -292,12 +291,11 @@ let humanBotGameController = (() => {
         controller.switchTurn();
         displayController.updateDisplay();
 
-        // bot will play with methods assured to be accessible
         controller.botPlays();
 
         if (isGameTerminableWithResult) {
             controller.endGame();
-            // show final move
+            // show final move with active player unchanged and not switched yet
             displayController.updateDisplay();
             return;
         };
@@ -306,16 +304,11 @@ let humanBotGameController = (() => {
     };
 
     const playAllRounds = () => {
-        // do this playing each round until board is filled but through event listener loop
-        // get initial player then play from there
-        // bot plays first then momentum is as normal we may just interject the "round" we are on
         if (controller.getActivePlayer().getType() === "H") {
-            // on click do the following
             displayController.getBoardUI().addEventListener('click', playRound);
         } else {
-            // unprompted not triggered by fulfillment of a previous action but call to play next round
-            // bot will play with methods assured to be accessible
-            // do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
+            // Unprompted and not triggered by fulfillment of a previous action
+            // Do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
             controller.botPlays();
             controller.switchTurn();
 
@@ -331,7 +324,6 @@ let humanHumanGameController = (() => {
     let controller = gameplayController;
 
     const playRound = () => {
-        // start event listener with human playing before bot can then play
         const turnCount = 2;
         for (let i = 0; i < turnCount; i++) {
             controller.humanPlays();
@@ -383,10 +375,10 @@ let botBotGameController = (() => {
 })();
 
 let sessionExecuter = (() => {
-    // the different modules can extract data from the DOM services provided by the displayController
+    // the different modules can extract temporary visual data from the DOM services provided by the displayController
     // then get data from game session where its really permanently stored and decoupled from the impermanent and volatile DOM that only displays data and is reliable for nothing else
     const startSession = () => {
-        // TODO: create players for session extracted/read from DOM for actual storage in the game session so nothing changes
+        // TODO: create players for session extracted/read from DOM for actual storage in the game session so nothing changes (simply one object via its services feeds to another object that was already used via its services)
         gameSession.createPlayers(); // we don't know its human/bot players before running this but this is the start of a new game and based off this we choose which to run
         let { player1, player2 } = gameSession.getSelectedPlayers();
         if (player1.getType() === 'H' && player2.getType() === 'H') {
@@ -400,17 +392,15 @@ let sessionExecuter = (() => {
 
     const playHumanBotGame = () => {
         // we can just play game from start
-        // set players to be accessible in gameplay session
+        // set players in session to be accessible for this gameplay session
         humanBotGameController.setPlayersFromSessionData();
-        // this function is a property of it by inheritance in Object.assign()
-        /* to play all rounds do it via the set event listener I'd say but not here no need to dig out the functionality from the function*/
         humanBotGameController.playAllRounds();
         gameboard.resetBoard();
     };
 
     const playHumanHumanGame = () => {
         // we can just play game from start
-        // set players to be accessible in gameplay session
+        // set players in session to be accessible for this gameplay session
         humanHumanGameController.setPlayersFromSessionData();
         humanHumanGameController.playAllRounds();
         gameboard.resetBoard();
@@ -418,7 +408,7 @@ let sessionExecuter = (() => {
 
     const playBotBotGame = () => {
         // we can just play game from start
-        // set players to be accessible in gameplay session
+        // set players in session to be accessible for this gameplay session
         botBotGameController.setPlayersFromSessionData();
         botBotGameController.playAllRounds();
         gameboard.resetBoard();
@@ -436,14 +426,16 @@ let displayController = (() => {
     let player2Name;
     let player2Symbol;
 
+    // if it hasn't yet switched player and its still stuck on current player in the event listener loop this is how you control retries
     let humanPlayerRowInput, humanPlayerColInput;
 
     let boardDisplay = document.querySelector('.board');
+    let replayButton = document.querySelector('.replay');
+    let playButton = document.querySelector('.play');
 
     // for now get info from there as is already done, get data from display controller next time if needed though (you can compose them in different ways as long as you use high level functions in object (module) they belong)
+    // store player from DOM for later retrieval
     const storePlayerInfo = () => {
-        // don't set player data immediately here and couple with the code for the game session, just return it to there and continue as normal to make code maintainable
-        // game session controls data storage here the UI is simply providing a service, its own
         player1Type = document.querySelector('.player.1.type').value;
         player1Name = document.querySelector('.player.1.name').value;
         player1Symbol = document.querySelector('.player.1.symbol').value;
@@ -495,27 +487,23 @@ let displayController = (() => {
         return { col: humanPlayerColInput, row: humanPlayerRowInput }
     };
 
-    // do above functions in order
-
-    // execute an entire session with DOM control inside i.e. providing its services
-    // controls flow automatically but I think it needs to be slightly different or in start session it controls disappearing of that form once trigger clicked and continues with the rest of the stuff
-    // within sessionExecuter use DOM however you need to now to provide input, it's ok as long as you use an object's services however, coherently as you'd like
-    // my worry was objects feeding back into each other to use each others services, they are still isolating but its not one way
-    // it is restrictive for the display controller but its services are still used inevitably later
-    do { // do this entire process hopefully with event listeners, as this DOM has nothing to do with the logic but running it from DOM if there is a trigger (like a click) or starting the process running without a trigger from the start unlike in the connectfour article
-        sessionExecuter.startSession();
-    } while (prompt('Would you like to play again? Type Y for yes', 'Y') === 'Y');
-
     // don't add this here I think but within session code
     boardDisplay.addEventListener('click', handleBoardClicks);
 
     //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object)
     // it's out of sync the event listeners but its ok, once this, only then can the other thing happen and that is how order is enforced so the next desired thing happens, only after this happens on this click
-    let playButton = document.querySelector('.play');
+
     playButton.addEventListener('click', () => {
         storePlayerInfo();
         // TODO: Implement this
         hideForm();
+        startSession();
+    });
+
+    replayButton.addEventListener('click', () => {
+        showForm();
+        // TODO: Optionally show form with previously entered details
+        // play button click will start it all again
     });
 
     const getBoardUI = () => boardDisplay;
