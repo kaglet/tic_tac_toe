@@ -41,7 +41,7 @@ function Bot() {
     let player = Player();
 
     let name = "bot";
-    let type = "B";
+    let type = 'bot';
 
     // All bot players can perform this action to place random move on open spot on board
     const playBotMove = () => {
@@ -72,7 +72,7 @@ function Human() {
     let player = Player();
 
     let name = "human";
-    let type = "H";
+    let type = "human";
 
     const getName = () => name;
 
@@ -96,10 +96,10 @@ const gameSession = function () {
         let player1Type = displayController.getPlayerInfo().player1Info.type;
 
         switch (player1Type) {
-            case 'H':
+            case 'human':
                 player1 = Human();
                 break;
-            case 'B':
+            case 'bot':
                 player1 = Bot();
                 break;
             default:
@@ -109,10 +109,10 @@ const gameSession = function () {
         let player2Type = displayController.getPlayerInfo().player2Info.type;
 
         switch (player2Type) {
-            case 'H':
+            case 'human':
                 player2 = Human();
                 break;
-            case 'B':
+            case 'bot':
                 player2 = Bot();
                 break;
             default:
@@ -305,7 +305,7 @@ let humanBotGameController = (() => {
     };
 
     const playAllRounds = () => {
-        if (controller.getActivePlayer().getType() === "H") {
+        if (controller.getActivePlayer().getType() === "human") {
             displayController.getBoardUI().addEventListener('click', playRound);
         } else {
             // Unprompted and not triggered by fulfillment of a previous action
@@ -382,11 +382,11 @@ let sessionExecuter = (() => {
         // TODO: create players for session extracted/read from DOM for actual storage in the game session so nothing changes (simply one object via its services feeds to another object that was already used via its services)
         gameSession.createPlayers(); // we don't know its human/bot players before running this but this is the start of a new game and based off this we choose which to run
         let { player1, player2 } = gameSession.getSelectedPlayers();
-        if (player1.getType() === 'H' && player2.getType() === 'H') {
+        if (player1.getType() === 'human' && player2.getType() === 'human') {
             playHumanHumanGame();
-        } else if (player1.getType() === 'B' && player2.getType() === 'B') {
+        } else if (player1.getType() === 'bot' && player2.getType() === 'bot') {
             playBotBotGame();
-        } else if ((player1.getType() === 'H' && player2.getType() === 'B') || (player1.getType() === 'B' && player2.getType() === 'H')) {
+        } else if ((player1.getType() === 'human' && player2.getType() === 'bot') || (player1.getType() === 'bot' && player2.getType() === 'human')) {
             playHumanBotGame();
         }
     };
