@@ -204,6 +204,7 @@ const gameplayController = function () {
     const getActivePlayer = () => activePlayer;
 
     const humanPlays = () => {
+        displayController.storePlayerInput();
         // get data from store just entered on click and call human plays after so I don't have to get through too many parameter passes
         let row = displayController.getCapturedPlayerInput().row;
         let col = displayController.getCapturedPlayerInput().col;
