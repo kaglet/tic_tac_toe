@@ -312,6 +312,7 @@ let humanBotGameController = (() => {
             // Do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
             controller.botPlays();
             controller.switchTurn();
+            displayController.updateDisplay();
 
             displayController.getBoardUI().addEventListener('click', playRound);
         }
