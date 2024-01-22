@@ -444,6 +444,10 @@ let displayController = (() => {
         player2Type = document.querySelector('#p2-human').checked ? document.querySelector('#p2-human').value : document.querySelector('#p2-bot').value;
         player2Name = document.querySelector('#p2-name').value;
         player2Symbol = document.querySelector('#p2-x').checked ? document.querySelector('#p2-x').value : document.querySelector('#p2-o').value;
+        // TODO: Make sure player 1 and 2 symbols differ else do not allow to move on beyond in play method so we have to retry the store method
+        // TODO: Make sure a name for each is entered and field is not empty
+        // TODO: Show these results as part of error shower object in display controller that logs the errors like my previous sign up project, for the player where the error is relevant so a player 1 and 2 error logger
+        // TODO: Mark name as required field in the HTML
     };
 
     const getPlayerInfo = () => {
@@ -491,11 +495,13 @@ let displayController = (() => {
     const showForm = () => {
         let form = document.querySelector('form.players-info');
         // make form visible
+        form.style.display = 'block';
     };
 
     const hideForm = () => {
         let form = document.querySelector('form.players-info');
         // make form invisible
+        form.style.display = 'none';
     };
 
     //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object) or can use the storage of another service since this just controls UI
