@@ -2,8 +2,7 @@
 
 function Cell() {
     let value = "";
-    // Outside this function we do not have to care what defines emptiness. Instead it is known inside a cell's own internal implementation.
-    // This therefore only has to be changed in one place for all objects that access this function.
+
     const isEmpty = () => {
         return value === "";
     }
@@ -14,15 +13,14 @@ function Cell() {
 
     const getValue = () => value;
 
-
     return { isEmpty, writeToken, getValue };
 }
 
 function Player() {
     let score = 0;
     let token;
-    // TODO: Do something with the name, like use it in printings
     let name;
+    let type;
 
     const winRound = () => {
         score++;
@@ -34,53 +32,46 @@ function Player() {
 
     const getToken = () => token;
 
-    return { winRound, chooseToken, getToken }
+    const getName = () => name;
+
+    const getType = () => type;
+
+    const setName = (newName) => { 
+        name = newName; 
+    };
+
+    const setType = (playerType) => {
+        type = playerType;
+    }; 
+
+    return { winRound, chooseToken, getToken, getName, getType, setName, setType }
 }
 
 function Bot() {
     let player = Player();
-
-    let name = "bot";
-    let type = 'bot';
-
-    // All bot players can perform this action to place random move on open spot on board
+    player.setType('bot');
+    // All bot players can perform this action to place a random move on an open spot on board
     const playBotMove = () => {
-        // Reduce dimensionality of array and eliminate cells played on to produce a list of cell objects that have not been played on
-        // Objects are assigned by reference so same objects in the 2D array are the same as the ones in this 1D array
         let availableCells = gameboard.getBoard().flat().filter(cell => cell.isEmpty());
 
         let min = 0;
         let max = availableCells.length - 1;
         randomCellPos = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        // If no available cells for bot to play on then board is filled and will be caught out
+        // board is filled so there is no available cell to play to
         if (availableCells.length === 0) return;
 
         availableCells[randomCellPos].writeToken(player.getToken());
     };
 
-    const getName = () => name;
-
-    const getType = () => type;
-
-    const setName = (newName) => { name = newName };
-
-    return Object.assign({}, player, { playBotMove, getName, setName, getType });
+    return Object.assign({}, player, { playBotMove });
 }
 
 function Human() {
     let player = Player();
+    player.setType('human');
 
-    let name = "human";
-    let type = "human";
-
-    const getName = () => name;
-
-    const getType = () => type;
-
-    const setName = (newName) => { name = newName };
-
-    return Object.assign({}, player, { getName, setName, getType });
+    return Object.assign({}, player);
 }
 
 // Single instance objects
@@ -530,7 +521,6 @@ let displayController = (() => {
     //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object) or can use the storage of another service since this just controls UI
     playButton.addEventListener('click', () => {
         storePlayerInfo();
-        // TODO: Implement this
         hideForm();
         showBoard();
         sessionExecuter.startSession();
@@ -548,3 +538,5 @@ let displayController = (() => {
     // on click play round and do other stuff, can't be coupled together though has to be a unique service where DOM just reads and sends info to objects
     return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput };
 })();
+
+// Can other objects care about the details of the implementation? I.e. can this job better be outsourced somewhere else so a centralised location. 
