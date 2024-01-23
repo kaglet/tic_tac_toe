@@ -36,13 +36,13 @@ function Player() {
 
     const getType = () => type;
 
-    const setName = (newName) => { 
-        name = newName; 
+    const setName = (newName) => {
+        name = newName;
     };
 
     const setType = (playerType) => {
         type = playerType;
-    }; 
+    };
 
     return { winRound, chooseToken, getToken, getName, getType, setName, setType }
 }
@@ -249,7 +249,8 @@ let humanBotGameController = (() => {
     let controller = gameplayController;
 
     const playRound = (e) => {
-        controller.humanPlays(e);
+        // Return if play is invalid without switching turn, to be successful on next initiation of play round function
+        if (controller.humanPlays(e) === false) return;
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
             controller.endGame(playRound);
@@ -293,7 +294,8 @@ let humanHumanGameController = (() => {
     let controller = gameplayController;
 
     const playRound = (e) => {
-        controller.humanPlays(e);
+        // Return if play is invalid without switching turn, to be successful on next initiation of play round function
+        if (controller.humanPlays(e) === false) return;
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
             controller.endGame(playRound);
@@ -320,7 +322,7 @@ let botBotGameController = (() => {
         const turnCount = 2;
         for (let i = 0; i < turnCount; i++) {
             controller.botPlays();
-            
+
             let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
             if (isGameTerminableWithResult) {
                 return true;
@@ -332,11 +334,11 @@ let botBotGameController = (() => {
     };
 
     const playAllRounds = () => {
-        
+
         do {
         } while (!playRound());
 
-        controller.endGame(playRound);        
+        controller.endGame(playRound);
         // Display final move with active player who played the winning move unchanged and not switched yet to next player
         displayController.updateDisplay();
     };
@@ -349,14 +351,14 @@ let sessionExecuter = (() => {
     const startSession = () => {
         // Ensure gameboard is reset from previous round
         gameboard.resetBoard();
-        
+
         // TODO: Possibly refactor to reduce the redundancy of the game session having to create methods now instead of earlier as a service invoked by the DOM method
         /* 
         This function sets players for current session as stored from DOM storage method 
         although they could directly be stored from DOM the first time in storage method, 
         calling the other method of the gameSession services.
         */
-        gameSession.createPlayers(); 
+        gameSession.createPlayers();
         let { player1, player2 } = gameSession.getSelectedPlayers();
         if (player1.getType() === 'human' && player2.getType() === 'human') {
             playHumanHumanGame();
@@ -528,4 +530,4 @@ let displayController = (() => {
 // the different modules can extract temporary visual data from the DOM services provided by the displayController
 // then get data from game session where its really permanently stored and decoupled from the impermanent and volatile DOM that only displays data and is reliable for nothing else
 
-    // Adding one object to link to each other in providing services helps decoupling. You can give the other object data from anywhere and it will feed nicely to the rest of the system. 
+// Adding one object to link to each other in providing services helps decoupling. You can give the other object data from anywhere and it will feed nicely to the rest of the system. 
