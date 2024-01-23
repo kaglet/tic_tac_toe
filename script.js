@@ -449,6 +449,11 @@ let displayController = (() => {
             player2ErrorMessages += 'Player tokens must be different';
         }
 
+        if (player1Name.trim() === player2Name.trim()) {
+            player1ErrorMessages += 'Player names must be different';
+            player2ErrorMessages += 'Player names must be different';
+        }
+
         if (player1ErrorMessages || player2ErrorMessages) {
             alert(`${player1ErrorMessages} and ${player2ErrorMessages}`);
             return false;
