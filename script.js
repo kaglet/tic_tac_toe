@@ -415,14 +415,16 @@ let displayController = (() => {
     let playButton = document.querySelector('.play');
     let dialog = document.querySelector('dialog');
     let resultDisplay = document.querySelector('.game-result');
+    let p1ErrorsDisplay = document.querySelector('.p1.error');
+    let p2ErrorsDisplay = document.querySelector('.p2.error');
 
-    // These two functions do not store game logic
+    // These error functions do not store game logic but control display on surface level DOM before launching into game
     const displayP1InputErrors = () => {
-
+        p1ErrorsDisplay.textContent = `${player1ErrorMessages}`;
     };
 
     const displayP2InputErrors = () => {
-
+        p2ErrorsDisplay.textContent = `${player2ErrorMessages}`;
     };
 
     const storePlayerInfo = () => {
@@ -445,17 +447,18 @@ let displayController = (() => {
         }
 
         if (player1Symbol === player2Symbol) {
-            player1ErrorMessages += 'Player tokens must be different';
-            player2ErrorMessages += 'Player tokens must be different';
+            player1ErrorMessages += 'Player tokens must be different\r\n';
+            player2ErrorMessages += 'Player tokens must be different\r\n';
         }
 
         if (player1Name.trim() === player2Name.trim()) {
-            player1ErrorMessages += 'Player names must be different';
-            player2ErrorMessages += 'Player names must be different';
+            player1ErrorMessages += 'Player names must be different\r\n';
+            player2ErrorMessages += 'Player names must be different\r\n';
         }
 
         if (player1ErrorMessages || player2ErrorMessages) {
-            alert(`${player1ErrorMessages} and ${player2ErrorMessages}`);
+            displayP1InputErrors();
+            displayP2InputErrors();
             return false;
         }
 
