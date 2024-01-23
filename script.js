@@ -405,6 +405,9 @@ let displayController = (() => {
     let player2Name;
     let player2Symbol;
 
+    let player1ErrorMessages;
+    let player2ErrorMessages;
+
     let humanPlayerRowInput, humanPlayerColInput;
 
     let boardDisplay = document.querySelector('.board');
@@ -413,18 +416,48 @@ let displayController = (() => {
     let dialog = document.querySelector('dialog');
     let resultDisplay = document.querySelector('.game-result');
 
+    // These two functions do not store game logic
+    const displayP1InputErrors = () => {
+
+    };
+
+    const displayP2InputErrors = () => {
+
+    };
+
     const storePlayerInfo = () => {
+        player1ErrorMessages = player2ErrorMessages = '';
+
         player1Type = document.querySelector('#p1-human').checked ? document.querySelector('#p1-human').value : document.querySelector('#p1-bot').value;
         player1Name = document.querySelector('#p1-name').value;
         player1Symbol = document.querySelector('#p1-x').checked ? document.querySelector('#p1-x').value : document.querySelector('#p1-o').value;
 
+        if (player1Name.trim() === '') {
+            player1ErrorMessages += 'Player 1 name cannot be left blank\r\n';
+        }
+
         player2Type = document.querySelector('#p2-human').checked ? document.querySelector('#p2-human').value : document.querySelector('#p2-bot').value;
         player2Name = document.querySelector('#p2-name').value;
         player2Symbol = document.querySelector('#p2-x').checked ? document.querySelector('#p2-x').value : document.querySelector('#p2-o').value;
-        // TODO: Make sure player 1 and 2 symbols differ else do not allow to move on beyond in play method so we have to retry the store method
-        // TODO: Make sure a name for each is entered and field is not empty
+        
+        if (player2Name.trim() === '') {
+            player2ErrorMessages += 'Player 2 name cannot be left blank\r\n';
+        }
+
+        if (player1Symbol === player2Symbol) {
+            player1ErrorMessages += 'Player tokens must be different';
+            player2ErrorMessages += 'Player tokens must be different';
+        }
+
+        if (player1ErrorMessages || player2ErrorMessages) {
+            alert(`${player1ErrorMessages} and ${player2ErrorMessages}`);
+            return false;
+        }
+
+        return true;
         // TODO: Show these results as part of error shower object in display controller that logs the errors like my previous sign up project, for the player where the error is relevant so a player 1 and 2 error logger
         // TODO: Mark name as required field in the HTML
+        // Simply append to error message and display rightly to player 1 or player 2 where it belongs, call the player 1 and 2 error handling
     };
 
     const getPlayerInfo = () => {
@@ -507,11 +540,12 @@ let displayController = (() => {
 
     playButton.addEventListener('click', () => {
         // TODO: This store method should use the game session data as the controller does not have that data yet unless its the centralized controller storing the player info
-        storePlayerInfo();
-        hideForm();
-        showBoard();
-        // The sessionExecuter is the highest module below the DOM controller that can start the gameplay process based off the input data
-        sessionExecuter.startSession();
+        if(storePlayerInfo()){
+            hideForm();
+            showBoard();
+            // The sessionExecuter is the highest module below the DOM controller that can start the gameplay process based off the input data
+            sessionExecuter.startSession();
+        }
     });
     replayButtons.forEach(btn => btn.addEventListener('click', () => {
         hideEndDialog();
@@ -524,16 +558,3 @@ let displayController = (() => {
     return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput, showEndDialog };
 })();
 
-// Can other objects care about the details of the implementation? I.e. can this job better be outsourced somewhere else so a centralised location. 
-// When you create players get the info from the DOM service not as a parameters, that is what making it restrictive means, it doesn't mean exchange of info between services is not possible
-// parameters to provide data are unnecessary when you have services from other objects to provide data
-
-// Intermediate steps might not be needed
-// TODO: Optionally set winner player via internal method to know who's name to display and it is not dependent on the previous functionality of who was switched to the active player at game's end
-// TODO: Create better return output e.g. playMove can return false to help other functions break and return even though it doesn't seem like a boolean function even if early escape with condition returns make sense and need a true/false return
-// If this logic is enforced though you do not need to worry about small things like this. but they are nice maintenance points.
-
-// the different modules can extract temporary visual data from the DOM services provided by the displayController
-// then get data from game session where its really permanently stored and decoupled from the impermanent and volatile DOM that only displays data and is reliable for nothing else
-
-// Adding one object to link to each other in providing services helps decoupling. You can give the other object data from anywhere and it will feed nicely to the rest of the system. 
