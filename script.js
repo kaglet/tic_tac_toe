@@ -169,7 +169,6 @@ const gameboard = function () {
 const gameplayController = (() => {
     let player1, player2;
     let activePlayer;
-    let winner;
 
     const setPlayersFromSessionData = () => {
         ({ player1, player2 } = gameSession.getSelectedPlayers());
@@ -243,13 +242,9 @@ const gameplayController = (() => {
         // Beyond this function terminate further logic if you can
     };
 
-    const setWinner = (winningPlayer) => {
-        winner = winningPlayer;
-    };
+    const getResult = () => gameResult;
 
-    const getWinner = () => winner;
-
-    return { switchTurn, getActivePlayer, setPlayersFromSessionData, humanPlays, botPlays, checkWin, endGame, setWinner, getWinner };
+    return { switchTurn, getActivePlayer, setPlayersFromSessionData, humanPlays, botPlays, checkWin, endGame, getResult };
 })();
 
 let humanBotGameController = (() => {
@@ -477,11 +472,8 @@ let displayController = (() => {
     };
 
     const showEndDialog = () => {
-        let winner = gameplayController.getWinner(); 
-        resultDisplay.textContent = `The winner is ${winner.getName()}`;
+        resultDisplay.textContent = `The winner is ${gameplayController.getResult()}`;
         dialog.showModal();
-        // get the last active player
-        // or get winner as set in the gameplayController so we set it just right 
     };
 
     const hideEndDialog = () => {
