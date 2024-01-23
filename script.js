@@ -165,7 +165,7 @@ const gameboard = function () {
     return { playMove, getBoard, resetBoard, isBoardFilled };
 }();
 
-// Bundles up functionality that initializes and controls the flow of the overall game play from start, middle to end
+// Bundles up functionality that initializes and controls the flow and tempo of the overall game play from start, middle to end
 const gameplayController = function () {
     let player1, player2;
     let activePlayer
@@ -264,7 +264,7 @@ let humanBotGameController = (() => {
 
         if (isGameTerminableWithResult) {
             controller.endGame(playRound);
-            // show final move with active player unchanged and not switched yet
+            // Display final move with active player who played the winning move unchanged and not switched yet to next player
             displayController.updateDisplay();
             return;
         };
@@ -276,8 +276,7 @@ let humanBotGameController = (() => {
         if (controller.getActivePlayer().getType() === "human") {
             displayController.getBoardUI().addEventListener('click', playRound);
         } else {
-            // Unprompted and not triggered by fulfillment of a previous action
-            // Do this bot play at the start before playing rounds in usual tempo dictated by clicks from here on and cancelled out by a win
+            // This initial bot play is unprompted and not triggered by fulfillment of a previous action, unlike within the tempo dictated by clicks and the human playing before hand
             controller.botPlays();
             controller.switchTurn();
             displayController.updateDisplay();
@@ -289,7 +288,7 @@ let humanBotGameController = (() => {
     return Object.assign({}, controller, { playAllRounds });
 })();
 
-// execute or just initialize functions for use later and return
+// These are sub-controller modules that extend the main game play controller //
 let humanHumanGameController = (() => {
     let controller = gameplayController;
 
@@ -300,12 +299,12 @@ let humanHumanGameController = (() => {
             let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
             if (isGameTerminableWithResult) {
                 controller.endGame(playRound);
-                // show final move
+                // Display final move with active player who played the winning move unchanged and not switched yet to next player
                 displayController.updateDisplay();
                 return;
             };
             controller.switchTurn();
-            // make play then update screen with new player's turn after old player played
+            // Display next player in turn and previous player's move on board
             displayController.updateDisplay();
         }
     };
@@ -320,17 +319,17 @@ let humanHumanGameController = (() => {
 let botBotGameController = (() => {
     let controller = gameplayController;
 
-    // bot move will reflect in DOM on update screen, that's how it goes once it goes into storage for board changes it reflects
     const playRound = () => {
         const turnCount = 2;
         for (let i = 0; i < turnCount; i++) {
             controller.botPlays();
-            // TODO: mark winner player to know who's name to display and it is not dependent on the functionality of the active player
+            
             let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
             if (isGameTerminableWithResult) {
                 return true;
             }
             controller.switchTurn();
+            // Update screen with logical board updated from bot move
             displayController.updateDisplay();
         }
     };
@@ -341,21 +340,26 @@ let botBotGameController = (() => {
         } while (!playRound());
 
         controller.endGame(playRound);        
-        // show final move
+        // Display final move with active player who played the winning move unchanged and not switched yet to next player
         displayController.updateDisplay();
     };
 
     return Object.assign({}, controller, { playAllRounds });
 })();
 
+// Initializes a new session with player data captured and executes the respective chosen gameplay controller to start the game
 let sessionExecuter = (() => {
-    // the different modules can extract temporary visual data from the DOM services provided by the displayController
-    // then get data from game session where its really permanently stored and decoupled from the impermanent and volatile DOM that only displays data and is reliable for nothing else
     const startSession = () => {
-        // make sure gameboard is reset from previous round
+        // Ensure gameboard is reset from previous round
         gameboard.resetBoard();
-        // TODO: create players for session extracted/read from DOM for actual storage in the game session so nothing changes (simply one object via its services feeds to another object that was already used via its services)
-        gameSession.createPlayers(); // we don't know its human/bot players before running this but this is the start of a new game and based off this we choose which to run
+        
+        // TODO: Possibly refactor to reduce the redundancy of the game session having to create methods now instead of earlier as a service invoked by the DOM method
+        /* 
+        This function sets players for current session as stored from DOM storage method 
+        although they could directly be stored from DOM the first time in storage method, 
+        calling the other method of the gameSession services.
+        */
+        gameSession.createPlayers(); 
         let { player1, player2 } = gameSession.getSelectedPlayers();
         if (player1.getType() === 'human' && player2.getType() === 'human') {
             playHumanHumanGame();
@@ -367,24 +371,20 @@ let sessionExecuter = (() => {
     };
 
     const playHumanBotGame = () => {
-        // we can just play game from start
-        // set players in session to be accessible for this gameplay session
+        // TODO: Potentially remove the need for another set players for game session function since there are now 3 stages for this when there could only be one
+        /* Because again, setting players for this controller from the session from the DOM seems redundant */
         humanBotGameController.setPlayersFromSessionData();
         displayController.updateDisplay();
         humanBotGameController.playAllRounds();
     };
 
     const playHumanHumanGame = () => {
-        // we can just play game from start
-        // set players in session to be accessible for this gameplay session
         humanHumanGameController.setPlayersFromSessionData();
         displayController.updateDisplay();
         humanHumanGameController.playAllRounds();
     };
 
     const playBotBotGame = () => {
-        // we can just play game from start
-        // set players in session to be accessible for this gameplay session
         botBotGameController.setPlayersFromSessionData();
         displayController.updateDisplay();
         botBotGameController.playAllRounds();
@@ -402,15 +402,12 @@ let displayController = (() => {
     let player2Name;
     let player2Symbol;
 
-    // if it hasn't yet switched player and its still stuck on current player in the event listener loop this is how you control retries
     let humanPlayerRowInput, humanPlayerColInput;
 
     let boardDisplay = document.querySelector('.board');
     let replayButton = document.querySelector('.replay');
     let playButton = document.querySelector('.play');
 
-    // for now get info from there as is already done, get data from display controller next time if needed though (you can compose them in different ways as long as you use high level functions in object (module) they belong)
-    // store player from DOM for later retrieval
     const storePlayerInfo = () => {
         player1Type = document.querySelector('#p1-human').checked ? document.querySelector('#p1-human').value : document.querySelector('#p1-bot').value;
         player1Name = document.querySelector('#p1-name').value;
@@ -441,14 +438,12 @@ let displayController = (() => {
             boardDisplay.removeChild(boardDisplay.lastChild);
         }
 
-        // TODO: For each cell already there in the board display, just update its value don't rerender new objects
-        // Have initial board creation and render of permanent UI board that is not to be changed
+        // TODO: For each cell already there in the board display, simply update its value don't do this rerender of new objects. Have initial board creation and render of permanent UI board that is not to be changed
         board.forEach((row, i) => {
             row.forEach((cell, j) => {
                 const cellButton = document.createElement("button");
                 cellButton.classList.add("cell");
-                // Create a data attribute to identify the column
-                // This makes it easier to pass into our `playRound` function 
+                // Set custom data attributes that are easily accessible from a DOM target
                 cellButton.dataset.row = i;
                 cellButton.dataset.column = j;
                 cellButton.textContent = cell.getValue();
@@ -461,6 +456,7 @@ let displayController = (() => {
         const selectedColumn = event.target.dataset.column;
         const selectedRow = event.target.dataset.row;
 
+        // On click of an element not a cell on the board store no player input for cell selected
         if (!selectedColumn || !selectedRow) return;
 
         humanPlayerRowInput = selectedRow;
@@ -495,24 +491,22 @@ let displayController = (() => {
         board.style.display = 'none';
     };
 
-    //on click of button store player info (not available for use yet outside this object until the function is called and its better suited here in this object) or can use the storage of another service since this just controls UI
     playButton.addEventListener('click', () => {
+        // TODO: This store method should use the game session data as the controller does not have that data yet unless its the centralized controller storing the player info
         storePlayerInfo();
         hideForm();
         showBoard();
+        // The sessionExecuter is the highest module below the DOM controller that can start the gameplay process based off the input data
         sessionExecuter.startSession();
     });
 
     replayButton.addEventListener('click', () => {
         showForm();
         hideBoard();
-        // TODO: Optionally show form with previously entered details
-        // play button click will start it all again
     });
 
     const getBoardUI = () => boardDisplay;
 
-    // on click play round and do other stuff, can't be coupled together though has to be a unique service where DOM just reads and sends info to objects
     return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput };
 })();
 
@@ -523,3 +517,10 @@ let displayController = (() => {
 // Intermediate steps might not be needed
 // TODO: After invalid move and showing alert allow entry of next move
 // TODO: After bot wins in human-bot play disallow human being able to play next move and affect the board
+// TODO: Optionally set winner player via internal method to know who's name to display and it is not dependent on the previous functionality of who was switched to the active player at game's end
+// If this logic is enforced though you do not need to worry about small things like this. but they are nice maintenance points.
+
+// the different modules can extract temporary visual data from the DOM services provided by the displayController
+// then get data from game session where its really permanently stored and decoupled from the impermanent and volatile DOM that only displays data and is reliable for nothing else
+
+    // Adding one object to link to each other in providing services helps decoupling. You can give the other object data from anywhere and it will feed nicely to the rest of the system. 
