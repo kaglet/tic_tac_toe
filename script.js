@@ -292,21 +292,18 @@ let humanBotGameController = (() => {
 let humanHumanGameController = (() => {
     let controller = gameplayController;
 
-    const playRound = () => {
-        const turnCount = 2;
-        for (let i = 0; i < turnCount; i++) {
-            controller.humanPlays(e);
-            let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
-            if (isGameTerminableWithResult) {
-                controller.endGame(playRound);
-                // Display final move with active player who played the winning move unchanged and not switched yet to next player
-                displayController.updateDisplay();
-                return;
-            };
-            controller.switchTurn();
-            // Display next player in turn and previous player's move on board
+    const playRound = (e) => {
+        controller.humanPlays(e);
+        let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
+        if (isGameTerminableWithResult) {
+            controller.endGame(playRound);
+            // Display final move with active player who played the winning move unchanged and not switched yet to next player
             displayController.updateDisplay();
-        }
+            return;
+        };
+        controller.switchTurn();
+        // Display next player in turn and previous player's move on board
+        displayController.updateDisplay();
     };
 
     const playAllRounds = () => {
@@ -523,7 +520,7 @@ let displayController = (() => {
 // parameters to provide data are unnecessary when you have services from other objects to provide data
 
 // Intermediate steps might not be needed
-// TODO: After invalid move and showing alert allow entry of next move
+// TODO: After invalid move and showing alert allow entry of next move and disallow next person's play (prevent controller's player switch basically)
 // TODO: After bot wins in human-bot play disallow human being able to play next move and affect the board
 // TODO: Optionally set winner player via internal method to know who's name to display and it is not dependent on the previous functionality of who was switched to the active player at game's end
 // If this logic is enforced though you do not need to worry about small things like this. but they are nice maintenance points.
