@@ -166,7 +166,7 @@ const gameboard = function () {
 }();
 
 // Bundles up functionality that initializes and controls the flow and tempo of the overall game play from start, middle to end
-const gameplayController = function () {
+const gameplayController = (() => {
     let player1, player2;
     let activePlayer
 
@@ -243,7 +243,7 @@ const gameplayController = function () {
     };
 
     return { switchTurn, getActivePlayer, setPlayersFromSessionData, humanPlays, botPlays, checkWin, endGame };
-}();
+})();
 
 let humanBotGameController = (() => {
     let controller = gameplayController;
@@ -465,6 +465,14 @@ let displayController = (() => {
 
     const getCapturedPlayerInput = () => {
         return { col: humanPlayerColInput, row: humanPlayerRowInput }
+    };
+
+    const showEndDialog = () => {
+
+    };
+
+    const hideEndDialog = () => {
+
     };
 
     const showForm = () => {
