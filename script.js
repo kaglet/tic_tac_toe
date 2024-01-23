@@ -143,13 +143,6 @@ const gameboard = function () {
         });
     };
 
-    const printBoard = () => {
-        const valueBoard = board.map(row => row.map(cell => cell.getValue()));
-        for (let i = 0; i < valueBoard.length; i++) {
-            console.log(`[${valueBoard[i].toString()}]`);
-        }
-    };
-
     const playMove = ({ row, col }, player) => {
         const isMoveValid = board[row][col].isEmpty();
         if (!isMoveValid) {
@@ -169,7 +162,7 @@ const gameboard = function () {
         });
     });
 
-    return { printBoard, playMove, getBoard, resetBoard, isBoardFilled };
+    return { playMove, getBoard, resetBoard, isBoardFilled };
 }();
 
 // Bundles up functionality that initializes and controls the flow of the overall gameplay session
@@ -186,11 +179,6 @@ const gameplayController = function () {
         activePlayer = (activePlayer === player1) ? player2 : player1;
     };
 
-    // print round and that relevant info explicitly not via GUI which first extracts info like board, and active player, and does it all in the GUI to "print" instead of here
-    const printRound = () => {
-        gameboard.printBoard();
-    };
-
     const getActivePlayer = () => activePlayer;
 
     const humanPlays = (e) => {
@@ -203,14 +191,12 @@ const gameplayController = function () {
         if (gameboard.playMove({ row, col }, getActivePlayer()) === false) return false;
 
         console.log(`Placing ${getActivePlayer().getName()}'s token`);
-        printRound();
     };
 
     const botPlays = () => {
         console.log(`It is the following player\'s turn: ${getActivePlayer().getName()}`);
         console.log(`Placing ${getActivePlayer().getName()}'s token`);
         getActivePlayer().playBotMove();
-        printRound();
     }
 
     // check if previous move resulted in a winning configuration occurring
@@ -264,7 +250,7 @@ const gameplayController = function () {
         // terminate any other logic to terminate game i.e. terminate playRounds like if any other person was to play next, just need to ensure this play rounds function is terminated and it is since event listener is removed and next form of logic won't be played yet I assume though it should be enforced in code that later shit does not occur
     };
 
-    return { switchTurn, getActivePlayer, printRound, setPlayersFromSessionData, humanPlays, botPlays, checkWin, endGame };
+    return { switchTurn, getActivePlayer, setPlayersFromSessionData, humanPlays, botPlays, checkWin, endGame };
 }();
 
 let humanBotGameController = (() => {
