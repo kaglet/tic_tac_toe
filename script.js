@@ -191,8 +191,9 @@ const gameplayController = function () {
     };
 
     const botPlays = () => {
+        // Play bot move in the special way a bot does it, not requiring the gameboard's playMove method
         getActivePlayer().playBotMove();
-    }
+    };
 
     // Check if previous move resulted in a winning configuration occurring
     const checkWin = () => {
@@ -227,22 +228,18 @@ const gameplayController = function () {
         let toBottomLeftDiag = middleIsNonEmpty && middleCell.getValue() === boardArr[0][2].getValue() && middleCell.getValue() === boardArr[2][0].getValue();
         let toBottomRightDiag = middleIsNonEmpty && middleCell.getValue() === boardArr[0][0].getValue() && middleCell.getValue() === boardArr[2][2].getValue();
 
-        // return final true or false if the last check fails
+        // Return final true or false if the last check fails
         return toBottomLeftDiag || toBottomRightDiag;
     };
 
     const endGame = (playRound) => {
         displayController.getBoardUI().removeEventListener('click', playRound);
-        // display game result
-        // after playing all rounds announce game result
         if (gameboard.isBoardFilled()) {
-            // draw
             gameResult = 'Draw!';
         } else {
             gameResult = `${getActivePlayer().getName()} won the game!`;
         }
-        console.log(gameResult);
-        // terminate any other logic to terminate game i.e. terminate playRounds like if any other person was to play next, just need to ensure this play rounds function is terminated and it is since event listener is removed and next form of logic won't be played yet I assume though it should be enforced in code that later shit does not occur
+        // Beyond this function terminate further logic if you can
     };
 
     return { switchTurn, getActivePlayer, setPlayersFromSessionData, humanPlays, botPlays, checkWin, endGame };
