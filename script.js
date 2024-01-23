@@ -239,6 +239,7 @@ const gameplayController = (() => {
         } else {
             gameResult = `${getActivePlayer().getName()} won the game!`;
         }
+        displayController.showEndDialog();
         // Beyond this function terminate further logic if you can
     };
 
@@ -407,7 +408,7 @@ let displayController = (() => {
     let humanPlayerRowInput, humanPlayerColInput;
 
     let boardDisplay = document.querySelector('.board');
-    let replayButton = document.querySelector('.replay');
+    let replayButtons = document.querySelectorAll('.replay');
     let playButton = document.querySelector('.play');
     let dialog = document.querySelector('dialog');
     let resultDisplay = document.querySelector('.game-result');
@@ -472,7 +473,7 @@ let displayController = (() => {
     };
 
     const showEndDialog = () => {
-        resultDisplay.textContent = `The winner is ${gameplayController.getResult()}`;
+        resultDisplay.textContent = `${gameplayController.getResult()}`;
         dialog.showModal();
     };
 
@@ -512,15 +513,15 @@ let displayController = (() => {
         // The sessionExecuter is the highest module below the DOM controller that can start the gameplay process based off the input data
         sessionExecuter.startSession();
     });
-
-    replayButton.addEventListener('click', () => {
+    replayButtons.forEach(btn => btn.addEventListener('click', () => {
+        hideEndDialog();
         showForm();
         hideBoard();
-    });
+    }));
 
     const getBoardUI = () => boardDisplay;
 
-    return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput };
+    return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput, showEndDialog };
 })();
 
 // Can other objects care about the details of the implementation? I.e. can this job better be outsourced somewhere else so a centralised location. 
