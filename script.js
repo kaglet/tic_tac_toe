@@ -165,7 +165,7 @@ const gameboard = function () {
     return { playMove, getBoard, resetBoard, isBoardFilled };
 }();
 
-// Bundles up functionality that initializes and controls the flow of the overall gameplay session
+// Bundles up functionality that initializes and controls the flow of the overall game play from start, middle to end
 const gameplayController = function () {
     let player1, player2;
     let activePlayer
@@ -183,30 +183,26 @@ const gameplayController = function () {
 
     const humanPlays = (e) => {
         displayController.storePlayerInput(e);
-        // get data from store just entered on click and call human plays after so I don't have to get through too many parameter passes
+
         let row = displayController.getCapturedPlayerInput().row;
         let col = displayController.getCapturedPlayerInput().col;
-        console.log(`It is the following player\'s turn: ${getActivePlayer().getName()}`);
 
         if (gameboard.playMove({ row, col }, getActivePlayer()) === false) return false;
-
-        console.log(`Placing ${getActivePlayer().getName()}'s token`);
     };
 
     const botPlays = () => {
-        console.log(`It is the following player\'s turn: ${getActivePlayer().getName()}`);
-        console.log(`Placing ${getActivePlayer().getName()}'s token`);
         getActivePlayer().playBotMove();
     }
 
-    // check if previous move resulted in a winning configuration occurring
+    // Check if previous move resulted in a winning configuration occurring
     const checkWin = () => {
         let horizontalMidPosition = verticalMidPosition = 1;
         let boardArr = gameboard.getBoard();
 
+        // Check comparison point is not empty to not match based off emptiness
         let middleIsNonEmpty;
         for (let i = 0; i < gameboard.getBoard().length; i++) {
-            // check horizontally (across rows)
+            // Check horizontally (across rows)
             middleIsNonEmpty = !boardArr[i][horizontalMidPosition].isEmpty();
             let middleEqualsRight = boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition + 1].getValue();
             let middleEqualsLeft = boardArr[i][horizontalMidPosition].getValue() === boardArr[i][horizontalMidPosition - 1].getValue();
@@ -215,7 +211,7 @@ const gameplayController = function () {
                 return true;
             }
 
-            // check vertically (across cols)
+            // Check vertically (across cols)
             middleIsNonEmpty = !boardArr[verticalMidPosition][i].isEmpty();
             let middleEqualsUp = boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition - 1][i].getValue();
             let middleEqualsDown = boardArr[verticalMidPosition][i].getValue() === boardArr[verticalMidPosition + 1][i].getValue();
@@ -225,8 +221,7 @@ const gameplayController = function () {
             }
         }
 
-        // check diagonally
-        // check comparison point is not empty to not match based off emptiness
+        // Check diagonally
         let middleCell = boardArr[verticalMidPosition][horizontalMidPosition];
         middleIsNonEmpty = !middleCell.isEmpty();
         let toBottomLeftDiag = middleIsNonEmpty && middleCell.getValue() === boardArr[0][2].getValue() && middleCell.getValue() === boardArr[2][0].getValue();
