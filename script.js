@@ -1,4 +1,4 @@
-// Multiple instance objects
+// MULTIPLE INSTANCE OBJECTS (FACTORIES) //
 
 function Cell() {
     let value = "";
@@ -58,7 +58,7 @@ function Bot() {
         let max = availableCells.length - 1;
         randomCellPos = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        // board is filled so there is no available cell to play to
+        // Board is filled so there is no available cell to play to
         if (availableCells.length === 0) return;
 
         availableCells[randomCellPos].writeToken(player.getToken());
@@ -74,15 +74,12 @@ function Human() {
     return Object.assign({}, player);
 }
 
-// Single instance objects
+// SINGLE INSTANCE OBJECTS (MODULE PATTERN SINGLETONS) //
 
 // Bundles up (stores) and sets game session data
 const gameSession = function () {
     let player1, player2;
 
-    // When you create players get the info from the DOM service not as a parameters, that is what making it restrictive means, it doesn't mean exchange of info between services is not possible
-    // then it needs something from the outside and its not closed to itself for other services that access it too
-    // parameters to provide data are unnecessary when you have services from other objects to provide data
     const createPlayers = () => {
         let player1Type = displayController.getPlayerInfo().player1Info.type;
 
@@ -110,9 +107,11 @@ const gameSession = function () {
                 break;
         }
 
+        // set custom name
         player1.setName(displayController.getPlayerInfo().player1Info.name);
         player2.setName(displayController.getPlayerInfo().player2Info.name);
 
+        // set custom token
         player1.chooseToken(displayController.getPlayerInfo().player1Info.symbol);
         player2.chooseToken(displayController.getPlayerInfo().player2Info.symbol);
     };
@@ -128,7 +127,7 @@ const gameboard = function () {
     const cols = rows = 3;
     board = [];
 
-    // a single final initialization with the cell objects that will always be used
+    // Perform the first initialization with the once created cell objects to be reused for all game sessions, much like this gameboard
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < cols; j++) {
@@ -137,9 +136,9 @@ const gameboard = function () {
     }
 
     const resetBoard = () => {
-        board.forEach((row, i) => {
-            row.forEach((col, j) => {
-                board[i][j].writeToken("");
+        board.forEach((row) => {
+            row.forEach((cell) => {
+                cell.writeToken("");
             });
         });
     };
@@ -540,3 +539,9 @@ let displayController = (() => {
 })();
 
 // Can other objects care about the details of the implementation? I.e. can this job better be outsourced somewhere else so a centralised location. 
+// When you create players get the info from the DOM service not as a parameters, that is what making it restrictive means, it doesn't mean exchange of info between services is not possible
+// parameters to provide data are unnecessary when you have services from other objects to provide data
+
+// Intermediate steps might not be needed
+// TODO: After invalid move and showing alert allow entry of next move
+// TODO: After bot wins in human-bot play disallow human being able to play next move and affect the board
