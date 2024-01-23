@@ -262,7 +262,8 @@ let humanBotGameController = (() => {
         displayController.updateDisplay();
 
         controller.botPlays();
-
+        
+        isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled()
         if (isGameTerminableWithResult) {
             controller.endGame(playRound);
             // Display final move with active player who played the winning move unchanged and not switched yet to next player
@@ -522,9 +523,9 @@ let displayController = (() => {
 // parameters to provide data are unnecessary when you have services from other objects to provide data
 
 // Intermediate steps might not be needed
-// TODO: After invalid move and showing alert allow entry of next move and disallow next person's play (prevent controller's player switch basically)
 // TODO: After bot wins in human-bot play disallow human being able to play next move and affect the board
 // TODO: Optionally set winner player via internal method to know who's name to display and it is not dependent on the previous functionality of who was switched to the active player at game's end
+// TODO: Create better return output e.g. playMove can return false to help other functions break and return even though it doesn't seem like a boolean function even if early escape with condition returns make sense and need a true/false return
 // If this logic is enforced though you do not need to worry about small things like this. but they are nice maintenance points.
 
 // the different modules can extract temporary visual data from the DOM services provided by the displayController
