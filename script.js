@@ -463,9 +463,6 @@ let displayController = (() => {
         }
 
         return true;
-        // TODO: Show these results as part of error shower object in display controller that logs the errors like my previous sign up project, for the player where the error is relevant so a player 1 and 2 error logger
-        // TODO: Mark name as required field in the HTML
-        // Simply append to error message and display rightly to player 1 or player 2 where it belongs, call the player 1 and 2 error handling
     };
 
     const getPlayerInfo = () => {
@@ -534,23 +531,23 @@ let displayController = (() => {
         form.style.display = 'none';
     };
 
-    const showBoard = () => {
-        let board = document.querySelector('.board');
+    const showGameplaySession = () => {
+        let gameplaySessionDisplay = document.querySelector('.gameplay-session');
         // make form invisible
-        board.style.display = 'grid';
+        gameplaySessionDisplay.style.display = 'grid';
     };
 
-    const hideBoard = () => {
-        let board = document.querySelector('.board');
+    const hideGameplaySession = () => {
+        let gameplaySessionDisplay = document.querySelector('.gameplay-session');
         // make form invisible
-        board.style.display = 'none';
+        gameplaySessionDisplay.style.display = 'none';
     };
 
     playButton.addEventListener('click', () => {
         // TODO: This store method should use the game session data as the controller does not have that data yet unless its the centralized controller storing the player info
         if(storePlayerInfo()){
             hideForm();
-            showBoard();
+            showGameplaySession();
             // The sessionExecuter is the highest module below the DOM controller that can start the gameplay process based off the input data
             sessionExecuter.startSession();
         }
@@ -558,7 +555,7 @@ let displayController = (() => {
     replayButtons.forEach(btn => btn.addEventListener('click', () => {
         hideEndDialog();
         showForm();
-        hideBoard();
+        hideGameplaySession();
     }));
 
     const getBoardUI = () => boardDisplay;
