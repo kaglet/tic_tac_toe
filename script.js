@@ -411,7 +411,8 @@ let displayController = (() => {
     let humanPlayerRowInput, humanPlayerColInput;
 
     let boardDisplay = document.querySelector('.board');
-    let replayButtons = document.querySelectorAll('.replay');
+    let replayButton = document.querySelector('.replay');
+    let resetButton = document.querySelector('.reset');
     let playButton = document.querySelector('.play');
     let resultDisplay = document.querySelector('.game-result');
     let p1ErrorsDisplay = document.querySelector('.p1.error');
@@ -545,13 +546,19 @@ let displayController = (() => {
             sessionExecuter.startSession();
         }
     });
-    replayButtons.forEach(btn => btn.addEventListener('click', () => {
+
+    replayButton.addEventListener('click', () => {
         showForm();
         hideGameplaySession();
-    }));
+    });
+
+    resetButton.addEventListener('click', () => {
+        sessionExecuter.startSession();
+    });
 
     const getBoardUI = () => boardDisplay;
 
     return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput, displayEndResult };
 })();
 
+// TODO: If I play the winning move it should not be a draw
