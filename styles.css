@@ -22,9 +22,14 @@ body {
     --standard-font-size: 1.2rem;
     --h2-font-size: 2.8rem;
     --h3-font-size: 1.9rem;
-    --main-clr: #2D3047;
-    --accent-clr: #A9F0D1;
-    --text-clr: #A9F0D1;
+    --main-clr: rgb(237, 237, 237);
+    --accent-clr: #ec8282;
+    --text-clr: #ec8282;
+    --neutral-text-clr: whitesmoke;
+}
+
+h1, h2 {
+    color: #D05353;
 }
 
 h1 {
@@ -58,7 +63,8 @@ section.player {
     flex: 1;
     display: grid;
     grid-template: auto repeat( 3, 1fr) / 1fr;
-    border: 2px solid var(--accent-clr);
+    border-radius: 0.6rem;
+    box-shadow: 2px 2px 10px grey;
     padding: 2rem;
 }
 
@@ -110,13 +116,13 @@ li::marker {
 .name input {
     font-size: var(--standard-font-size);
     padding: 0.8em 0.3rem;
-    background-color: var(--accent-clr);
+    background-color:var(--neutral-text-clr);
     appearance: none;
     border: none;
 }
 
 .name input:focus {
-    outline: 3.7px solid white;
+    outline: 3.7px solid var(--text-clr);
     outline-offset: max(1px, 0.05em);
     border: none;
 }
@@ -127,7 +133,7 @@ li::marker {
     width: fit-content;
     grid-template-columns: repeat(3, auto);
     grid-template-rows: repeat(3, auto);
-    background-color: var(--text-clr);
+    background-color: var(--accent-clr);
     gap: 0.4rem;
 }
 
@@ -145,8 +151,8 @@ li::marker {
 }
 
 .board button {
-    color: var(--text-clr);
     background-color: var(--main-clr);
+    color: var(--text-clr);
     width: 7rem;
     height: 7rem;
     font-size: 6rem;
@@ -162,6 +168,8 @@ li::marker {
 button {
     appearance: none;
     border: none;
+    color: var(--main-clr);
+    background-color: var(--accent-clr);
 }
 
 .in-game-options > button, form > button {
@@ -171,7 +179,6 @@ button {
     display: block;
     font: inherit;
     font-size: var(--standard-font-size);
-    background-color: var(--accent-clr);
 }
 
 .gameplay-session {
