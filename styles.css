@@ -95,6 +95,7 @@ li::marker {
 
 .error {
     color: rgb(255, 66, 66);
+    white-space: pre;
 }
 
 .name {

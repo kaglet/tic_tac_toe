@@ -420,11 +420,11 @@ let displayController = (() => {
 
     // These error functions do not store game logic but control display on surface level DOM before launching into game
     const displayP1InputErrors = () => {
-        p1ErrorsDisplay.textContent = `${player1ErrorMessages}`;
+        p1ErrorsDisplay.textContent = player1ErrorMessages;
     };
 
     const displayP2InputErrors = () => {
-        p2ErrorsDisplay.textContent = `${player2ErrorMessages}`;
+        p2ErrorsDisplay.textContent = player2ErrorMessages;
     };
 
     const storePlayerInfo = () => {
