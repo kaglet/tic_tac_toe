@@ -234,10 +234,11 @@ const gameplayController = (() => {
 
     const endGame = (playRound) => {
         displayController.getBoardUI().removeEventListener('click', playRound);
-        if (gameboard.isBoardFilled()) {
-            gameResult = 'Draw!';
-        } else {
+        // what if they play the winning move that fills the board
+        if (checkWin()) {
             gameResult = `${getActivePlayer().getName()} won the game!`;
+        } else if (gameboard.isBoardFilled()) {
+            gameResult = 'Draw!';
         }
 
         displayController.displayEndResult();
@@ -266,7 +267,7 @@ let humanBotGameController = (() => {
 
         controller.botPlays();
 
-        isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled()
+        isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
             // Display final move with active player who played the winning move unchanged and not switched yet to next player
             displayController.updateDisplay();
