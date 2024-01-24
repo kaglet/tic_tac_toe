@@ -239,8 +239,8 @@ const gameplayController = (() => {
         } else {
             gameResult = `${getActivePlayer().getName()} won the game!`;
         }
-        displayController.showEndDialog();
-        // Beyond this function terminate further logic if you can
+
+        displayController.displayEndResult();
     };
 
     const getResult = () => gameResult;
@@ -256,9 +256,9 @@ let humanBotGameController = (() => {
         if (controller.humanPlays(e) === false) return;
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
-            controller.endGame(playRound);
-            // show final move
+            // Display final move with active player who played the winning move unchanged and not switched yet to next player
             displayController.updateDisplay();
+            controller.endGame(playRound);
             return;
         };
         controller.switchTurn();
@@ -268,9 +268,9 @@ let humanBotGameController = (() => {
 
         isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled()
         if (isGameTerminableWithResult) {
-            controller.endGame(playRound);
             // Display final move with active player who played the winning move unchanged and not switched yet to next player
             displayController.updateDisplay();
+            controller.endGame(playRound);
             return;
         };
         controller.switchTurn();
@@ -302,9 +302,9 @@ let humanHumanGameController = (() => {
         if (controller.humanPlays(e) === false) return;
         let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
         if (isGameTerminableWithResult) {
-            controller.endGame(playRound);
             // Display final move with active player who played the winning move unchanged and not switched yet to next player
             displayController.updateDisplay();
+            controller.endGame(playRound);
             return;
         };
         controller.switchTurn();
@@ -342,9 +342,9 @@ let botBotGameController = (() => {
         do {
         } while (!playRound());
 
-        controller.endGame(playRound);
         // Display final move with active player who played the winning move unchanged and not switched yet to next player
         displayController.updateDisplay();
+        controller.endGame(playRound);
     };
 
     return Object.assign({}, controller, { playAllRounds });
@@ -413,10 +413,10 @@ let displayController = (() => {
     let boardDisplay = document.querySelector('.board');
     let replayButtons = document.querySelectorAll('.replay');
     let playButton = document.querySelector('.play');
-    let dialog = document.querySelector('dialog');
     let resultDisplay = document.querySelector('.game-result');
     let p1ErrorsDisplay = document.querySelector('.p1.error');
     let p2ErrorsDisplay = document.querySelector('.p2.error');
+    let turnDisplay = document.querySelector('.turn');
 
     // These error functions do not store game logic but control display on surface level DOM before launching into game
     const displayP1InputErrors = () => {
@@ -472,7 +472,6 @@ let displayController = (() => {
     };
 
     const updateDisplay = () => {
-        let turnDisplay = document.querySelector('.turn');
 
         let board = gameboard.getBoard();
         turnDisplay.textContent = `${gameplayController.getActivePlayer().getName()}'s turn!`;
@@ -506,17 +505,12 @@ let displayController = (() => {
         humanPlayerColInput = selectedColumn;
     };
 
+    const displayEndResult = () => {
+        resultDisplay.textContent = gameplayController.getResult();
+    };
+
     const getCapturedPlayerInput = () => {
         return { col: humanPlayerColInput, row: humanPlayerRowInput }
-    };
-
-    const showEndDialog = () => {
-        resultDisplay.textContent = `${gameplayController.getResult()}`;
-        dialog.showModal();
-    };
-
-    const hideEndDialog = () => {
-        dialog.close();
     };
 
     const showForm = () => {
@@ -553,13 +547,12 @@ let displayController = (() => {
         }
     });
     replayButtons.forEach(btn => btn.addEventListener('click', () => {
-        hideEndDialog();
         showForm();
         hideGameplaySession();
     }));
 
     const getBoardUI = () => boardDisplay;
 
-    return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput, showEndDialog };
+    return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput, displayEndResult };
 })();
 
