@@ -25,7 +25,7 @@ body {
     --main-clr: rgb(237, 237, 237);
     --accent-clr: #eeeeee;
     --text-clr: #fef9f9;
-    --neutral-text-clr: rgb(204, 204, 204);
+    --neutral-text-clr: rgb(255, 255, 255);
     --p1-theme: #E58F65;
     --p2-theme: rgb(87, 146, 255);
 }
@@ -162,6 +162,7 @@ li::marker {
 .gameplay-session h2 {
     font-weight: 500;
     color: var(--neutral-text-clr);
+    text-shadow: 2px 2px 10px grey;
 }
 
 .gameplay-session > :nth-child(n) {
@@ -171,11 +172,18 @@ li::marker {
 .board button {
     background-color: var(--neutral-text-clr);
     border: none;
-    color: var(--text-clr);
     width: 7rem;
     height: 7rem;
     font-size: 6rem;
     border-radius: 0;
+}
+
+.board button.player-one-move {
+    color: var(--p1-theme);
+}
+
+.board button.player-two-move {
+    color: var(--p2-theme);
 }
 
 .in-game-options {
@@ -185,11 +193,12 @@ li::marker {
 }
 
 button:not(.board button) {
-    animation: color_change 2.7s cubic-bezier(1, 0.2, 0.2, 1) infinite alternate;
+    animation: color_change 2.7s cubic-bezier(1, 0.3, 0.3, 1) infinite alternate;
     /* animation: name duration timing-function delay iteration-count direction fill-mode; */
     appearance: none;
     border: none;
     color: var(--main-clr);
+    box-shadow: 2px 2px 10px grey;
 }
 
 @keyframes color_change {

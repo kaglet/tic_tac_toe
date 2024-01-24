@@ -489,6 +489,11 @@ let displayController = (() => {
                 cellButton.dataset.row = i;
                 cellButton.dataset.column = j;
                 cellButton.textContent = cell.getValue();
+                if (cell.getValue() === getPlayerInfo().player1Info.symbol) {
+                    cellButton.classList.add('player-one-move');
+                } else if (cell.getValue() === getPlayerInfo().player2Info.symbol) {
+                    cellButton.classList.add('player-two-move');
+                }
                 boardDisplay.appendChild(cellButton);
             })
         });
