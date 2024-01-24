@@ -8,7 +8,6 @@
 *::after {
     box-sizing: border-box;
     font-size: var(--standard-font-size);
-    border-radius: 0.6rem;
 }
 
 body {
@@ -24,8 +23,8 @@ body {
     --h2-font-size: 2.8rem;
     --h3-font-size: 1.9rem;
     --main-clr: #2D3047;
-    --accent-clr: #d2f5ff;
-    --text-clr: #FFFD82;
+    --accent-clr: #A9F0D1;
+    --text-clr: #A9F0D1;
 }
 
 h1 {
@@ -77,6 +76,10 @@ fieldset {
     border-left: none;
     border-right: none;
     position: relative;
+}
+
+button, input {
+    border-radius: 0.6rem;
 }
 
 input[type="radio"] {
