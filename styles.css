@@ -23,19 +23,28 @@ body {
     --h2-font-size: 2.8rem;
     --h3-font-size: 1.9rem;
     --main-clr: rgb(237, 237, 237);
-    --accent-clr: #ec8282;
-    --text-clr: #ec8282;
-    --neutral-text-clr: whitesmoke;
-}
-
-h1, h2 {
-    color: #D05353;
+    --accent-clr: #eeeeee;
+    --text-clr: #fef9f9;
+    --neutral-text-clr: rgb(204, 204, 204);
+    --p1-theme: #E58F65;
+    --p2-theme: rgb(87, 146, 255);
 }
 
 h1 {
-    font-size: 5rem;
     margin: auto;
     width: fit-content;
+}
+
+h1 span {
+    font-size: 5rem;
+}
+
+h1 span:nth-child(1), h1 span:nth-child(3) {
+    color: var(--p1-theme);
+}
+
+h1 span:nth-child(2) {
+    color: var(--p2-theme);
 }
 
 h2 {
@@ -66,6 +75,14 @@ section.player {
     border-radius: 0.6rem;
     box-shadow: 2px 2px 10px grey;
     padding: 2rem;
+}
+
+section.player.one {
+    background-color: var(--p1-theme);
+}
+
+section.player.two {
+    background-color: var(--p2-theme);
 }
 
 form {
@@ -144,6 +161,7 @@ li::marker {
 
 .gameplay-session h2 {
     font-weight: 500;
+    color: var(--neutral-text-clr);
 }
 
 .gameplay-session > :nth-child(n) {
@@ -151,7 +169,8 @@ li::marker {
 }
 
 .board button {
-    background-color: var(--main-clr);
+    background-color: var(--neutral-text-clr);
+    border: none;
     color: var(--text-clr);
     width: 7rem;
     height: 7rem;
@@ -165,11 +184,17 @@ li::marker {
     gap: 0.8rem;
 }
 
-button {
+button:not(.board button) {
+    animation: color_change 2.7s cubic-bezier(1, 0.2, 0.2, 1) infinite alternate;
+    /* animation: name duration timing-function delay iteration-count direction fill-mode; */
     appearance: none;
     border: none;
     color: var(--main-clr);
-    background-color: var(--accent-clr);
+}
+
+@keyframes color_change {
+    from { background-color: var(--p1-theme);}
+    to {background-color: var(--p2-theme);}
 }
 
 .in-game-options > button, form > button {
