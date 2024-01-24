@@ -234,7 +234,6 @@ const gameplayController = (() => {
 
     const endGame = (playRound) => {
         displayController.getBoardUI().removeEventListener('click', playRound);
-        // what if they play the winning move that fills the board
         if (checkWin()) {
             gameResult = `${getActivePlayer().getName()} won the game!`;
         } else if (gameboard.isBoardFilled()) {
@@ -561,5 +560,3 @@ let displayController = (() => {
 
     return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput, displayEndResult };
 })();
-
-// TODO: If I play the winning move it should not be a draw
