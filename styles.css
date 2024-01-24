@@ -8,6 +8,7 @@
 *::after {
     box-sizing: border-box;
     font-size: var(--standard-font-size);
+    border-radius: 0.6rem;
 }
 
 body {
@@ -17,9 +18,14 @@ body {
 
 :root {
     font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color: var(--text-clr);
+    background-color: var(--main-clr);
     --standard-font-size: 1.2rem;
     --h2-font-size: 2.8rem;
     --h3-font-size: 1.9rem;
+    --main-clr: #2D3047;
+    --accent-clr: #d2f5ff;
+    --text-clr: #FFFD82;
 }
 
 h1 {
@@ -33,7 +39,8 @@ h2 {
 }
 
 form h2 {
-    margin: 0 auto;
+    text-align: center;
+    border-bottom: 1px solid var(--accent-clr);
 }
 
 .name label, h3 {
@@ -52,6 +59,8 @@ section.player {
     flex: 1;
     display: grid;
     grid-template: auto repeat( 3, 1fr) / 1fr;
+    border: 2px solid var(--accent-clr);
+    padding: 2rem;
 }
 
 form {
@@ -59,19 +68,19 @@ form {
     padding: 0 4rem;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-}
-
-fieldset:first-of-type {
-    border-top: 1px solid grey;
+    gap: 0.9rem;
 }
 
 fieldset {
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid var(--accent-clr);
     border-top: none;
     border-left: none;
     border-right: none;
     position: relative;
+}
+
+input[type="radio"] {
+    accent-color: var(--accent-clr);
 }
 
 li {
@@ -97,6 +106,15 @@ li::marker {
 .name input {
     font-size: var(--standard-font-size);
     padding: 0.8em 0.3rem;
+    background-color: var(--accent-clr);
+    appearance: none;
+    border: none;
+}
+
+.name input:focus {
+    outline: 3.7px solid white;
+    outline-offset: max(1px, 0.05em);
+    border: none;
 }
 
 .board {
@@ -105,8 +123,8 @@ li::marker {
     width: fit-content;
     grid-template-columns: repeat(3, auto);
     grid-template-rows: repeat(3, auto);
-    background-color: rgb(19, 1, 120);
-    gap: 0.2rem;
+    background-color: var(--text-clr);
+    gap: 0.4rem;
 }
 
 .game-result {
@@ -123,9 +141,12 @@ li::marker {
 }
 
 .board button {
-    background-color: white;
+    color: var(--text-clr);
+    background-color: var(--main-clr);
     width: 7rem;
     height: 7rem;
+    font-size: 6rem;
+    border-radius: 0;
 }
 
 .in-game-options {
@@ -134,15 +155,19 @@ li::marker {
     gap: 0.8rem;
 }
 
-.in-game-options > button, form > button {
+button {
     appearance: none;
+    border: none;
+}
+
+.in-game-options > button, form > button {
     padding: 0.8em 0.3rem;
     width: 14rem;
-    border: none;
     margin: 0 auto;
     display: block;
     font: inherit;
     font-size: var(--standard-font-size);
+    background-color: var(--accent-clr);
 }
 
 .gameplay-session {
