@@ -10,87 +10,81 @@
 </head>
 
 <body>
+    <h1>Tic Tac Toe</h1>
     <form action="" class="players-info">
-        <h2>Player 1</h2>
-        <section class="player 1">
-            <fieldset>
-                <legend>Choose Type</legend>
-                <ul>
-                    <li>
-                        <input type="radio" name="p1-type" id="p1-human" value="human" checked>
-                        <label for="p1-human">Human</label>
-                    </li>
-                    <li>
-                        <input type="radio" name="p1-type" id="p1-bot" value="bot">
-                        <label for="p1-bot">Bot</label>
-                    </li>
-                </ul>
-            </fieldset>
-
-            <fieldset>
-                <legend>Choose Token</legend>
-                <ul>
-                    <li>
-                        <input type="radio" name="p1-token" id="p1-x" value="x" checked>
-                        <label for="p1-x">X</label>
-                    </li>
-                    <li>
-                        <input type="radio" name="p2-token" id="p1-o" value="o">
-                        <label for="p1-o">O</label>
-                    </li>
-                </ul>
-            </fieldset>
-
-            <div class="name">
-                <label for="p1-name">Name<span aria-label="required">*</span>:</label>
-                <input type="text" name="p1-name" id="p1-name"
-                    placeholder="For example: Player 1 / Human / Bot / Chris">
-            </div>
-
-            <div class="p1 error">
-                
-            </div>
-        </section>
-
-        <section class="player 2">
-            <h2>Player 2</h2>
-            <fieldset>
-                <legend>Choose Type</legend>
-                <ul>
-                    <li>
-                        <input type="radio" name="p2-type" id="p2-human" value="human">
-                        <label for="p2-human">Human</label>
-                    </li>
-                    <li>
-                        <input type="radio" name="p2-type" id="p2-bot" value="bot" checked>
-                        <label for="p2-bot">Bot</label>
-                    </li>
-                </ul>
-            </fieldset>
-
-            <fieldset>
-                <legend>Choose Token</legend>
-                <ul>
-                    <li>
-                        <input type="radio" name="p2-token" id="p2-x" value="x">
-                        <label for="p2-x">X</label>
-                    </li>
-                    <li>
-                        <input type="radio" name="p2-token" id="p2-o" value="o" checked>
-                        <label for="p2-o">O</label>
-                    </li>
-                </ul>
-            </fieldset>
-
-            <div class="name">
-                <label for="p2-name">Name<span aria-label="required">*</span>:</label>
-                <input type="text" name="p2-name" id="p2-name"
-                    placeholder="For example: Player 2 / Human / Bot / Chris">
-            </div>
-        </section>
-
-        <div class="p2 error">
-                
+        <div class="player-sections">
+            <section class="player 1">
+                <h2>Player 1</h2>
+                <fieldset>
+                    <legend>Choose Type</legend>
+                    <ul>
+                        <li>
+                            <input type="radio" name="p1-type" id="p1-human" value="human" checked>
+                            <label for="p1-human">Human</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="p1-type" id="p1-bot" value="bot">
+                            <label for="p1-bot">Bot</label>
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>Choose Token</legend>
+                    <ul>
+                        <li>
+                            <input type="radio" name="p1-token" id="p1-x" value="x" checked>
+                            <label for="p1-x">X</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="p1-token" id="p1-o" value="o">
+                            <label for="p1-o">O</label>
+                        </li>
+                    </ul>
+                </fieldset>
+                <div class="name">
+                    <label for="p1-name">Enter Name<span aria-label="required">*</span></label>
+                    <input type="text" name="p1-name" id="p1-name"
+                        placeholder="For example: Player 1 / Human / Bot / Chris">
+                </div>
+                <div class="p1 error">
+                </div>
+            </section>
+            <section class="player 2">
+                <h2>Player 2</h2>
+                <fieldset>
+                    <legend>Choose Type</legend>
+                    <ul>
+                        <li>
+                            <input type="radio" name="p2-type" id="p2-human" value="human">
+                            <label for="p2-human">Human</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="p2-type" id="p2-bot" value="bot" checked>
+                            <label for="p2-bot">Bot</label>
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>Choose Token</legend>
+                    <ul>
+                        <li>
+                            <input type="radio" name="p2-token" id="p2-x" value="x">
+                            <label for="p2-x">X</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="p2-token" id="p2-o" value="o" checked>
+                            <label for="p2-o">O</label>
+                        </li>
+                    </ul>
+                </fieldset>
+                <div class="name">
+                    <label for="p2-name">Enter Name<span aria-label="required">*</span></label>
+                    <input type="text" name="p2-name" id="p2-name"
+                        placeholder="For example: Player 2 / Human / Bot / Chris">
+                </div>
+                <div class="p2 error">
+                </div>
+            </section>
         </div>
 
         <button type="button" class="play">
@@ -98,8 +92,6 @@
         </button>
     </form>
 
-
-    <!-- add replay dialogue modal -->
     <div class="gameplay-session">
         <h2 class="game-result"></h2>
         <div class="board">

@@ -434,7 +434,7 @@ let displayController = (() => {
         player1Symbol = document.querySelector('#p1-x').checked ? document.querySelector('#p1-x').value : document.querySelector('#p1-o').value;
 
         if (player1Name.trim() === '') {
-            player1ErrorMessages += 'Player 1 name cannot be left blank\r\n';
+            player1ErrorMessages += '*Player 1 name cannot be left blank\r\n';
         }
 
         player2Type = document.querySelector('#p2-human').checked ? document.querySelector('#p2-human').value : document.querySelector('#p2-bot').value;
@@ -442,17 +442,17 @@ let displayController = (() => {
         player2Symbol = document.querySelector('#p2-x').checked ? document.querySelector('#p2-x').value : document.querySelector('#p2-o').value;
         
         if (player2Name.trim() === '') {
-            player2ErrorMessages += 'Player 2 name cannot be left blank\r\n';
+            player2ErrorMessages += '*Player 2 name cannot be left blank\r\n';
         }
 
         if (player1Symbol === player2Symbol) {
-            player1ErrorMessages += 'Player tokens must be different\r\n';
-            player2ErrorMessages += 'Player tokens must be different\r\n';
+            player1ErrorMessages += '*Player tokens must be different\r\n';
+            player2ErrorMessages += '*Player tokens must be different\r\n';
         }
 
         if (player1Name.trim() === player2Name.trim()) {
-            player1ErrorMessages += 'Player names must be different\r\n';
-            player2ErrorMessages += 'Player names must be different\r\n';
+            player1ErrorMessages += '*Player names must be different\r\n';
+            player2ErrorMessages += '*Player names must be different\r\n';
         }
 
         if (player1ErrorMessages || player2ErrorMessages) {

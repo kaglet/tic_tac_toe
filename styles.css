@@ -7,12 +7,92 @@
 *::before, 
 *::after {
     box-sizing: border-box;
+    font-size: var(--standard-font-size);
+}
 
+body {
+    min-height: 100vh;
+    padding: 1rem 0;
 }
 
 :root {
     font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     --standard-font-size: 1.2rem;
+    --h2-font-size: 2.8rem;
+    --h3-font-size: 1.9rem;
+}
+
+h1 {
+    font-size: 5rem;
+    margin: auto;
+    width: fit-content;
+}
+
+h2 {
+    font-size: var(--h2-font-size);
+}
+
+form h2 {
+    margin: 0 auto;
+}
+
+legend, .name label {
+    font-size: var(--h3-font-size);
+}
+
+.player-sections {
+    display: flex;
+    justify-items: center;
+    gap: 2rem;
+    flex: 1;
+}
+
+section.player {
+    flex: 1;
+    display: grid;
+    grid-template: auto repeat( 3, 1fr) / 1fr;
+}
+
+form {
+    min-height: 70vh;
+    padding: 0 4rem;
+    display: flex;
+    flex-direction: column;
+}
+
+fieldset:first-of-type {
+    border-top: 1px solid grey;
+}
+
+fieldset {
+    border-bottom: 1px solid grey;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+li::marker {
+    content: "";
+}
+
+.error {
+    color: rgb(255, 66, 66);
+}
+
+.name {
+    display: flex;
+    flex-direction: column;
+}
+
+.name input {
+    font-size: var(--standard-font-size);
+    padding: 0.8em 0.3rem;
 }
 
 .board {
@@ -26,15 +106,22 @@
 }
 
 .game-result {
-    font-size: 4rem;
     margin: auto;
     width: fit-content;
 }
 
+.gameplay-session h2 {
+    font-weight: 500;
+}
+
+.gameplay-session > :nth-child(n) {
+    margin-bottom: 1rem;
+}
+
 .board button {
     background-color: white;
-    width: 10rem;
-    height: 10rem;
+    width: 8rem;
+    height: 8rem;
 }
 
 .in-game-options > button, form > button {
@@ -42,7 +129,7 @@
     padding: 0.8em 0.3rem;
     width: 14rem;
     border: none;
-    margin: auto;
+    margin: 0 auto;
     display: block;
     font: inherit;
     font-size: var(--standard-font-size);
@@ -51,3 +138,4 @@
 .gameplay-session {
     display: none;
 }
+
