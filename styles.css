@@ -36,8 +36,9 @@ form h2 {
     margin: 0 auto;
 }
 
-legend, .name label {
+.name label, h3 {
     font-size: var(--h3-font-size);
+    font-weight: 500;
 }
 
 .player-sections {
@@ -58,6 +59,7 @@ form {
     padding: 0 4rem;
     display: flex;
     flex-direction: column;
+    gap: 0.3rem;
 }
 
 fieldset:first-of-type {
@@ -69,6 +71,7 @@ fieldset {
     border-top: none;
     border-left: none;
     border-right: none;
+    position: relative;
 }
 
 li {
@@ -88,6 +91,7 @@ li::marker {
 .name {
     display: flex;
     flex-direction: column;
+    gap: 0.3rem;
 }
 
 .name input {
@@ -120,8 +124,14 @@ li::marker {
 
 .board button {
     background-color: white;
-    width: 8rem;
-    height: 8rem;
+    width: 7rem;
+    height: 7rem;
+}
+
+.in-game-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 }
 
 .in-game-options > button, form > button {

@@ -515,7 +515,7 @@ let displayController = (() => {
     const showForm = () => {
         let form = document.querySelector('form.players-info');
         // make form visible
-        form.style.display = 'block';
+        form.style.display = 'flex';
     };
 
     const hideForm = () => {
