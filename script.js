@@ -416,7 +416,6 @@ let displayController = (() => {
     let resultDisplay = document.querySelector('.game-result');
     let p1ErrorsDisplay = document.querySelector('.p1.error');
     let p2ErrorsDisplay = document.querySelector('.p2.error');
-    let turnDisplay = document.querySelector('.turn');
 
     // These error functions do not store game logic but control display on surface level DOM before launching into game
     const displayP1InputErrors = () => {
@@ -474,7 +473,7 @@ let displayController = (() => {
     const updateDisplay = () => {
 
         let board = gameboard.getBoard();
-        turnDisplay.textContent = `${gameplayController.getActivePlayer().getName()}'s turn!`;
+        resultDisplay.textContent = `${gameplayController.getActivePlayer().getName()}'s turn!`;
 
         while (boardDisplay.firstChild) {
             boardDisplay.removeChild(boardDisplay.lastChild);
