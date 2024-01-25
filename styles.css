@@ -18,7 +18,7 @@ body {
 }
 
 :root {
-    font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: 'Poor Story', system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     color: var(--text-clr);
     background-color: var(--main-clr);
     --standard-font-size: 1.2rem;
@@ -41,7 +41,8 @@ h1 {
 }
 
 h1 span {
-    font-size: 5rem;
+    font-size: 7rem;
+    font-family: 'Single Day', cursive;
 }
 
 h1 span:nth-child(1), h1 span:nth-child(3) {
@@ -153,6 +154,7 @@ li::marker {
     background-color:var(--neutral-text-clr);
     appearance: none;
     border: none;
+    font-family: 'Barlow', sans-serif;
 }
 
 .name input:focus {
@@ -191,8 +193,12 @@ li::marker {
     border: none;
     width: 7rem;
     height: 7rem;
-    font-size: 6rem;
+    font-size: 8rem;
     border-radius: 0;
+    font-family: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .board button.player-one-move {
@@ -210,6 +216,7 @@ li::marker {
 }
 
 button:not(.board button) {
+    font-size: 1.7rem;
     animation: color_change 2.7s cubic-bezier(1, 0.3, 0.3, 1) infinite alternate;
     /* animation: name duration timing-function delay iteration-count direction fill-mode; */
     appearance: none;
@@ -225,7 +232,7 @@ button:not(.board button) {
 
 .in-game-options > button, form > button {
     padding: 0.8rem 0.3rem;
-    width: 14rem;
+    min-width: 16rem;
     margin: 0 auto;
     display: block;
     font: inherit;
