@@ -456,9 +456,11 @@ let displayController = (() => {
             player2ErrorMessages += '*Player names must be different\r\n';
         }
 
+        // Refresh display and show any errors even if none
+        displayP1InputErrors();
+        displayP2InputErrors();
+
         if (player1ErrorMessages || player2ErrorMessages) {
-            displayP1InputErrors();
-            displayP2InputErrors();
             return false;
         }
 
