@@ -35,14 +35,35 @@ body {
     --p2-dark-theme: rgb(91, 140, 232);
 }
 
+i {
+    color: var(--text-clr);
+    transition: transform 1s ease-in-out;
+}
+
+i:hover {
+    animation: rotate_scaled 0.2s ease-in-out infinite alternate;
+}
+
+@keyframes rotate_scaled {
+    0% {transform: scale(1.55) rotate(-45deg);}
+    100% {transform: scale(1.55) rotate(45deg);}
+}
+
 h1 {
     margin: 0 auto;
     width: fit-content;
+    position: relative;
 }
 
 h1 span {
     font-size: 7rem;
     font-family: 'Single Day', cursive;
+}
+
+.credit {
+    margin-left: 0.9rem;
+    font-size: 1.8rem;
+    text-shadow: 2px 2px 10px var(--shadow-clr);
 }
 
 h1 span:nth-child(1),
