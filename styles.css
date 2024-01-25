@@ -58,7 +58,11 @@ h2 {
 
 form h2 {
     text-align: center;
+}
+
+form h2 + p {
     border-bottom: 1px solid var(--main-clr);
+    text-align: center;
 }
 
 .name label, h3 {
