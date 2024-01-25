@@ -4,7 +4,7 @@
 
 This is a Tic-Tac-Toe game playable between customizable player types: human and/or bot, made as part of [The Odin Project](https://www.theodinproject.com) open source web development course, as part of the introduction to intermediate design patterns. It is the [2nd project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe) of the intermediate JavaScript section. 
 
-Find the live preview [here](https://kaglet.github.io/tic-tac-toe/).
+Find the live preview [here](https://kaglet.github.io/tic_tac_toe/).
 
 At 100% full screen the project should look similar to the below screenshot: 
 ![image](https://github.com/kaglet/tic_tac_toe/assets/96872447/de735437-f957-4041-a173-4dbdc85c8bfc)
