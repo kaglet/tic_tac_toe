@@ -3,8 +3,8 @@
     padding: 0;
 }
 
-*, 
-*::before, 
+*,
+*::before,
 *::after {
     box-sizing: border-box;
     font-size: var(--standard-font-size);
@@ -45,7 +45,8 @@ h1 span {
     font-family: 'Single Day', cursive;
 }
 
-h1 span:nth-child(1), h1 span:nth-child(3) {
+h1 span:nth-child(1),
+h1 span:nth-child(3) {
     color: var(--p1-theme);
 }
 
@@ -61,12 +62,13 @@ form h2 {
     text-align: center;
 }
 
-form h2 + p {
+form h2+p {
     border-bottom: 1px solid var(--main-clr);
     text-align: center;
 }
 
-.name label, h3 {
+.name label,
+h3 {
     font-size: var(--h3-font-size);
     font-weight: 500;
 }
@@ -78,7 +80,7 @@ form h2 + p {
     flex: 1;
 }
 
-section.player > :nth-child(n) {
+section.player> :nth-child(n) {
     padding: 0.7rem 0rem;
 }
 
@@ -93,12 +95,12 @@ section.player {
 
 section.player.one {
     /* Defined sections vs interpolated sections */
-    background-image: linear-gradient(to bottom, var(--p1-theme) 0% 20%, var(--p1-dark-theme) 30% 31% , var(--p1-theme) 41% 61%, var(--p1-dark-theme) 71% 72% , var(--p1-theme) 82% 100% );
+    background-image: linear-gradient(to bottom, var(--p1-theme) 0% 20%, var(--p1-dark-theme) 30% 31%, var(--p1-theme) 41% 61%, var(--p1-dark-theme) 71% 72%, var(--p1-theme) 82% 100%);
     background-color: var(--p1-theme);
 }
 
 section.player.two {
-    background-image: linear-gradient(to bottom, var(--p2-theme) 0% 20%, var(--p2-dark-theme) 30% 31% , var(--p2-theme) 41% 61%, var(--p2-dark-theme) 71% 72% , var(--p2-theme) 82% 100% );
+    background-image: linear-gradient(to bottom, var(--p2-theme) 0% 20%, var(--p2-dark-theme) 30% 31%, var(--p2-theme) 41% 61%, var(--p2-dark-theme) 71% 72%, var(--p2-theme) 82% 100%);
     background-color: var(--p2-theme);
 }
 
@@ -119,12 +121,50 @@ fieldset {
     position: relative;
 }
 
-button, input {
+button,
+input {
     border-radius: 0.6rem;
 }
 
 input[type="radio"] {
-    accent-color: var(--accent-clr);
+    background-color: var(--accent-clr);
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 0.24rem;
+    appearance: none;
+    transform: translateY(-0.15rem);
+    display: grid;
+    place-content: center;
+}
+
+input[type="radio"]:focus {
+    outline: max(2.5px, 0.05em) solid var(--accent-clr);
+    outline-offset: max(2px, 0.15em);
+  }
+
+input[type="radio"]::before {
+    content: "";
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 0.18rem;
+    transform: scale(0);
+    transition: transform 0.2s ease-in-out;
+}
+
+input[type="radio"]:checked::before {
+    transform: scale(1);
+} 
+
+.one input[type="radio"]::before {
+    box-shadow: inset 0em 0em 10rem var(--p1-dark-theme);
+    /* Windows High Contrast Mode */
+    /* background-color: CanvasText; */
+}
+
+.two input[type="radio"]::before {
+    box-shadow: inset 0em 0em 10rem var(--p2-dark-theme);
+    /* Windows High Contrast Mode */
+    /* background-color: CanvasText; */
 }
 
 li {
@@ -151,7 +191,7 @@ li::marker {
 .name input {
     font-size: var(--standard-font-size);
     padding: 0.8rem 0.3rem;
-    background-color:var(--neutral-text-clr);
+    background-color: var(--neutral-text-clr);
     appearance: none;
     border: none;
     font-family: 'Barlow', sans-serif;
@@ -184,7 +224,7 @@ li::marker {
     text-shadow: 2px 2px 10px var(--shadow-clr);
 }
 
-.gameplay-session > :nth-child(n) {
+.gameplay-session> :nth-child(n) {
     margin-bottom: 1rem;
 }
 
@@ -231,11 +271,17 @@ button:not(.board button) {
 }
 
 @keyframes color_change {
-    from { background-color: var(--p1-theme);}
-    to {background-color: var(--p2-theme);}
+    from {
+        background-color: var(--p1-theme);
+    }
+
+    to {
+        background-color: var(--p2-theme);
+    }
 }
 
-.in-game-options > button, form > button {
+.in-game-options>button,
+form>button {
     padding: 0.8rem 0.3rem;
     min-width: 16rem;
     margin: 0 auto;
@@ -247,4 +293,3 @@ button:not(.board button) {
 .gameplay-session {
     display: none;
 }
-
