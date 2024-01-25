@@ -37,7 +37,6 @@ body {
 
 i {
     color: var(--text-clr);
-    transition: transform 1s ease-in-out;
 }
 
 i:hover {
