@@ -215,6 +215,10 @@ li::marker {
     gap: 0.8rem;
 }
 
+button:not(.board button):hover {
+    transform: scale(1.05);
+}
+
 button:not(.board button) {
     font-size: 1.7rem;
     animation: color_change 2.7s cubic-bezier(1, 0.3, 0.3, 1) infinite alternate;
@@ -223,6 +227,7 @@ button:not(.board button) {
     border: none;
     color: var(--main-clr);
     box-shadow: 2px 2px 10px var(--shadow-clr);
+    transition: transform 0.2s ease;
 }
 
 @keyframes color_change {
