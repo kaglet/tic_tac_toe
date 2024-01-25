@@ -26,10 +26,13 @@ body {
     --h3-font-size: 1.9rem;
     --main-clr: rgb(237, 237, 237);
     --accent-clr: #eeeeee;
+    --shadow-clr: grey;
     --text-clr: #fef9f9;
     --neutral-text-clr: rgb(255, 255, 255);
     --p1-theme: #E58F65;
+    --p1-dark-theme: #e38556;
     --p2-theme: rgb(87, 146, 255);
+    --p2-dark-theme: rgb(91, 140, 232);
 }
 
 h1 {
@@ -55,7 +58,7 @@ h2 {
 
 form h2 {
     text-align: center;
-    border-bottom: 1px solid var(--accent-clr);
+    border-bottom: 1px solid var(--main-clr);
 }
 
 .name label, h3 {
@@ -79,15 +82,18 @@ section.player {
     display: grid;
     grid-template: auto repeat(2, 1fr) repeat(2, auto) / 1fr;
     border-radius: 0.6rem;
-    box-shadow: 2px 2px 10px grey;
+    box-shadow: 2px 2px 10px var(--shadow-clr);
     padding: 0rem 2rem;
 }
 
 section.player.one {
+    /* Defined sections vs interpolated sections */
+    background-image: linear-gradient(to bottom, var(--p1-theme) 0% 20%, var(--p1-dark-theme) 30% 31% , var(--p1-theme) 41% 61%, var(--p1-dark-theme) 71% 72% , var(--p1-theme) 82% 100% );
     background-color: var(--p1-theme);
 }
 
 section.player.two {
+    background-image: linear-gradient(to bottom, var(--p2-theme) 0% 20%, var(--p2-dark-theme) 30% 31% , var(--p2-theme) 41% 61%, var(--p2-dark-theme) 71% 72% , var(--p2-theme) 82% 100% );
     background-color: var(--p2-theme);
 }
 
@@ -139,7 +145,7 @@ li::marker {
 
 .name input {
     font-size: var(--standard-font-size);
-    padding: 0.8em 0.3rem;
+    padding: 0.8rem 0.3rem;
     background-color:var(--neutral-text-clr);
     appearance: none;
     border: none;
@@ -147,7 +153,7 @@ li::marker {
 
 .name input:focus {
     outline: 3.7px solid var(--text-clr);
-    outline-offset: max(1px, 0.05em);
+    outline-offset: max(1px, 0.05rem);
     border: none;
 }
 
@@ -169,7 +175,7 @@ li::marker {
 .gameplay-session h2 {
     font-weight: 500;
     color: var(--neutral-text-clr);
-    text-shadow: 2px 2px 10px grey;
+    text-shadow: 2px 2px 10px var(--shadow-clr);
 }
 
 .gameplay-session > :nth-child(n) {
@@ -205,7 +211,7 @@ button:not(.board button) {
     appearance: none;
     border: none;
     color: var(--main-clr);
-    box-shadow: 2px 2px 10px grey;
+    box-shadow: 2px 2px 10px var(--shadow-clr);
 }
 
 @keyframes color_change {
@@ -214,7 +220,7 @@ button:not(.board button) {
 }
 
 .in-game-options > button, form > button {
-    padding: 0.8em 0.3rem;
+    padding: 0.8rem 0.3rem;
     width: 14rem;
     margin: 0 auto;
     display: block;
