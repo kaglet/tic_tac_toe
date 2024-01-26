@@ -278,7 +278,7 @@ let humanBotGameController = (() => {
             controller.switchTurn();
             displayController.updateDisplay();
             displayController.getBoardUI().addEventListener('click', playRound);
-        }, 2000)
+        }, 1500)
     };
 
     const playAllRounds = () => {
@@ -293,7 +293,7 @@ let humanBotGameController = (() => {
                 displayController.updateDisplay();
 
                 displayController.getBoardUI().addEventListener('click', playRound);
-            }, 2000);
+            }, 1500);
         }
     };
 
@@ -344,7 +344,7 @@ let botBotGameController = (() => {
             displayController.updateDisplay();
             // play turn only after this is done, terminating once terminable sort of like a recursive function
             playNextTurn();
-        }, 1000);
+        }, 1500);
     };
 
     const playAllRounds = () => {
