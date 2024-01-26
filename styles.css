@@ -290,6 +290,11 @@ button:not(.board button) {
     transition: transform 0.2s ease;
 }
 
+button:not(.board button):disabled  {
+    animation: none;
+    background-color: var(--shadow-clr);
+}
+
 @keyframes color_change {
     from {
         background-color: var(--p1-theme);

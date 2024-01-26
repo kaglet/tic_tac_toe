@@ -233,6 +233,7 @@ const gameplayController = (() => {
     };
 
     const endGame = (playRound) => {
+        // TODO: check for a play round function that needs to be removed when this function is invoked before attempting to remove a non-existent listener in bot gameplay
         displayController.getBoardUI().removeEventListener('click', playRound);
         if (checkWin()) {
             gameResult = `${getActivePlayer().getName()} won the game!`;
@@ -290,7 +291,7 @@ let humanBotGameController = (() => {
                 controller.botPlays();
                 controller.switchTurn();
                 displayController.updateDisplay();
-    
+
                 displayController.getBoardUI().addEventListener('click', playRound);
             }, 2000);
         }
@@ -328,29 +329,28 @@ let humanHumanGameController = (() => {
 let botBotGameController = (() => {
     let controller = gameplayController;
 
-    const playRound = () => {
-        const turnCount = 2;
-        for (let i = 0; i < turnCount; i++) {
+    const playNextTurn = () => {
+        setTimeout(() => {
             controller.botPlays();
-
+            displayController.updateDisplay();
             let isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
             if (isGameTerminableWithResult) {
-                return true;
+                controller.endGame(playNextTurn);
+                displayController.enableButtons();
+                return;
             }
             controller.switchTurn();
             // Update screen with logical board updated from bot move
             displayController.updateDisplay();
-        }
+            // play turn only after this is done, terminating once terminable sort of like a recursive function
+            playNextTurn();
+        }, 1000);
     };
 
     const playAllRounds = () => {
-
-        do {
-        } while (!playRound());
-
-        // Display final move with active player who played the winning move unchanged and not switched yet to next player
+        displayController.disableButtons()
         displayController.updateDisplay();
-        controller.endGame(playRound);
+        playNextTurn();
     };
 
     return Object.assign({}, controller, { playAllRounds });
@@ -447,7 +447,7 @@ let displayController = (() => {
         player2Type = document.querySelector('#p2-human').checked ? document.querySelector('#p2-human').value : document.querySelector('#p2-bot').value;
         player2Name = document.querySelector('#p2-name').value;
         player2Symbol = document.querySelector('#p2-x').checked ? document.querySelector('#p2-x').value : document.querySelector('#p2-o').value;
-        
+
         if (player2Name.trim() === '') {
             player2ErrorMessages += '*Player 2 name cannot be left blank\r\n';
         }
@@ -551,14 +551,25 @@ let displayController = (() => {
     };
 
     playButton.addEventListener('click', () => {
+        enableButtons();
         // TODO: This store method should use the game session data as the controller does not have that data yet unless its the centralized controller storing the player info
-        if(storePlayerInfo()){
+        if (storePlayerInfo()) {
             hideForm();
             showGameplaySession();
             // The sessionExecuter is the highest module below the DOM controller that can start the gameplay process based off the input data
             sessionExecuter.startSession();
         }
     });
+
+    const enableButtons = () => {
+        replayButton.disabled = false;
+        resetButton.disabled = false;
+    };
+
+    const disableButtons = () => {
+        replayButton.disabled = true;
+        resetButton.disabled = true;
+    };
 
     replayButton.addEventListener('click', () => {
         showForm();
@@ -571,5 +582,5 @@ let displayController = (() => {
 
     const getBoardUI = () => boardDisplay;
 
-    return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput, displayEndResult };
+    return { getPlayerInfo, updateDisplay, getBoardUI, getCapturedPlayerInput, showForm, storePlayerInput, displayEndResult, disableButtons, enableButtons };
 })();
