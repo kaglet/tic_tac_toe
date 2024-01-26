@@ -44,8 +44,8 @@ i:hover {
 }
 
 @keyframes rotate_scaled {
-    0% {transform: scale(1.55) rotate(-45deg);}
-    100% {transform: scale(1.55) rotate(45deg);}
+    0% { transform: scale(1.55) rotate(-45deg); }
+    100% { transform: scale(1.55) rotate(45deg); }
 }
 
 h1 {

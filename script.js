@@ -263,30 +263,36 @@ let humanBotGameController = (() => {
         };
         controller.switchTurn();
         displayController.updateDisplay();
+        displayController.getBoardUI().removeEventListener('click', playRound);
+        setTimeout(() => {
+            controller.botPlays();
 
-        controller.botPlays();
-
-        isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
-        if (isGameTerminableWithResult) {
-            // Display final move with active player who played the winning move unchanged and not switched yet to next player
+            isGameTerminableWithResult = controller.checkWin() || gameboard.isBoardFilled();
+            if (isGameTerminableWithResult) {
+                // Display final move with active player who played the winning move unchanged and not switched yet to next player
+                displayController.updateDisplay();
+                controller.endGame(playRound);
+                return;
+            };
+            controller.switchTurn();
             displayController.updateDisplay();
-            controller.endGame(playRound);
-            return;
-        };
-        controller.switchTurn();
-        displayController.updateDisplay();
+            displayController.getBoardUI().addEventListener('click', playRound);
+        }, 2000)
     };
 
     const playAllRounds = () => {
         if (controller.getActivePlayer().getType() === "human") {
             displayController.getBoardUI().addEventListener('click', playRound);
         } else {
-            // This initial bot play is unprompted and not triggered by fulfillment of a previous action, unlike within the tempo dictated by clicks and the human playing before hand
-            controller.botPlays();
-            controller.switchTurn();
             displayController.updateDisplay();
-
-            displayController.getBoardUI().addEventListener('click', playRound);
+            // This initial bot play is unprompted and not triggered by fulfillment of a previous action, unlike within the tempo dictated by clicks and the human playing before hand
+            setTimeout(() => {
+                controller.botPlays();
+                controller.switchTurn();
+                displayController.updateDisplay();
+    
+                displayController.getBoardUI().addEventListener('click', playRound);
+            }, 2000);
         }
     };
 
