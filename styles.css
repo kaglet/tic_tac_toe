@@ -31,7 +31,7 @@ body {
     --neutral-text-clr: rgb(255, 255, 255);
     --p1-theme: #de5d4f;
     --p1-dark-theme: #de5d4f;
-    --p2-theme: #07A0C3;
+    --p2-theme: #29a9df;
     --p2-dark-theme: var(--p2-theme);
 }
 
