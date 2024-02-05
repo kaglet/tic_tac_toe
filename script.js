@@ -146,7 +146,6 @@ const gameboard = function () {
     const playMove = ({ row, col }, player) => {
         const isMoveValid = board[row][col].isEmpty();
         if (!isMoveValid) {
-            alert('Move is invalid. Please try again');
             return false;
         };
 
