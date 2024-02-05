@@ -29,10 +29,10 @@ body {
     --shadow-clr: grey;
     --text-clr: #fef9f9;
     --neutral-text-clr: rgb(255, 255, 255);
-    --p1-theme: #E58F65;
-    --p1-dark-theme: #e38556;
-    --p2-theme: rgb(87, 146, 255);
-    --p2-dark-theme: rgb(91, 140, 232);
+    --p1-theme: #de5d4f;
+    --p1-dark-theme: #de5d4f;
+    --p2-theme: #07A0C3;
+    --p2-dark-theme: var(--p2-theme);
 }
 
 i {
