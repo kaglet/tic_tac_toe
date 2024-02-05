@@ -30,9 +30,9 @@ body {
     --text-clr: #fef9f9;
     --neutral-text-clr: rgb(255, 255, 255);
     --p1-theme: #E58F65;
-    --p1-dark-theme: #e38556;
+    --p1-dark-theme: #E58F65;
     --p2-theme: rgb(87, 146, 255);
-    --p2-dark-theme: rgb(91, 140, 232);
+    --p2-dark-theme: rgb(87, 146, 255);
 }
 
 i {
