@@ -2,7 +2,7 @@
 
 ## Project Description   
 
-This is a Tic-Tac-Toe game playable between customizable player types: human and/or bot, made as part of [The Odin Project](https://www.theodinproject.com) open source web development course, as part of the introduction to intermediate design patterns. It is the [2nd project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe) of the intermediate JavaScript section. 
+This is a Tic-Tac-Toe game playable between customizable player types: human and/or bot, made as part of [The Odin Project](https://www.theodinproject.com) open source web development course, as part of the introduction to intermediate design patterns. It is the [2nd project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe) of the intermediate JavaScript section. Bot AI will be implemented later as part of a future milestone.
 
 Find the live preview [here](https://kaglet.github.io/tic_tac_toe/).
 
