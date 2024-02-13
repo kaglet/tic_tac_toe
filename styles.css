@@ -106,7 +106,7 @@ h1 {
     /* text-shadow: 10px 0 3px var(--h1-shadow-clr); */
     display: grid;
     justify-content: center;
-    padding: 1rem 0 0.5rem 0;
+    /* padding: 1rem 0 0.5rem 0; */
     position: relative;
     /* background-color: var(--secondary-theme-clr); */
     font-size: 7rem;
