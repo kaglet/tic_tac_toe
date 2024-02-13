@@ -378,4 +378,5 @@ form>button {
 
 .gameplay-session {
     display: none;
+    flex: 1;
 }
