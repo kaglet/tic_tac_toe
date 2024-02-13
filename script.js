@@ -479,7 +479,6 @@ let displayController = (() => {
     };
 
     const updateDisplay = () => {
-
         let board = gameboard.getBoard();
         resultDisplay.textContent = `${gameplayController.getActivePlayer().getName()}'s turn!`;
 

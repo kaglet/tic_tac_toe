@@ -113,6 +113,14 @@ section.player {
     padding: 0rem 2rem;
 }
 
+p.vs {
+    display: grid;
+    place-content: center;
+    font-size: 4rem;
+    width: 5rem;
+    color: black;
+}
+
 section.player.one {
     /* Defined sections vs interpolated sections */
     background-image: linear-gradient(to bottom, var(--p1-theme) 0% 20%, var(--p1-dark-theme) 30% 31%, var(--p1-theme) 41% 61%, var(--p1-dark-theme) 71% 72%, var(--p1-theme) 82% 100%);
