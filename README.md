@@ -6,8 +6,8 @@ This is a Tic-Tac-Toe game playable between customizable player types: human and
 
 Find the live preview [here](https://kaglet.github.io/tic_tac_toe/).
 
-At 100% full screen the project should look similar to the below screenshot: 
-![image](https://github.com/kaglet/tic_tac_toe/assets/96872447/4aff64ed-739b-41b4-961e-108ecb4d7a07)
+At 100% full screen the site should initially look similar to the below screenshots: 
+![image](https://github.com/kaglet/tic_tac_toe/assets/96872447/cd2a5e8b-2e68-4cde-88b3-f35c249c9433)
 
 ## New Skills Demonstrated
 
