@@ -54,7 +54,6 @@
 
 body {
     min-height: 100vh;
-    /* padding: 1rem 0; */
     display: flex;
     flex-direction: column;
 }
@@ -66,7 +65,7 @@ body {
     --standard-font-size: 1.2rem;
     --h2-font-size: 2.8rem;
     --h3-font-size: 1.9rem;
-    --main-theme-clr: black;
+    --h1-clr: black;
     --main-clr: #FFB400;
     --main-alt: #d69600;
     --secondary-theme-clr: #F6511D;
@@ -74,12 +73,6 @@ body {
     --shadow-clr: grey;
     --text-clr: #fef9f9;
     --neutral-text-clr: rgb(255, 255, 255);
-    --p1-theme: var(--secondary-theme-clr);
-    --p1-dark-theme: #F6511D;
-    --p2-theme: var(--p1-theme);
-    --p2-dark-theme: var(--p1-dark-theme);
-    --h1-clr: #000000;
-    /* --h1-shadow-clr: seagreen; */
 }
 
 i {
@@ -101,17 +94,12 @@ i:hover {
 }
 
 h1 {
-    /* border-bottom: 9px solid var(--p1-dark-theme); */
     color: var(--h1-clr);
-    /* text-shadow: 10px 0 3px var(--h1-shadow-clr); */
     display: grid;
     justify-content: center;
-    /* padding: 1rem 0 0.5rem 0; */
     position: relative;
-    /* background-color: var(--secondary-theme-clr); */
     font-size: 7rem;
     letter-spacing: 0.05rem;
-    /* font-family: sixty-four, cursive; */
 }
 
 .credit {
@@ -167,9 +155,7 @@ section.player {
     display: grid;
     grid-template: auto repeat(2, 1fr) repeat(2, auto) / 1fr;
     border-radius: 0.6rem;
-    /* box-shadow: 2px 2px 10px var(--shadow-clr); */
     padding: 0rem 2rem;
-    /* border: 3px solid var(--p1-dark-theme); */
     background-color: var(--main-alt);
 }
 
@@ -179,10 +165,10 @@ p.vs {
     font-size: 4rem;
     width: 5rem;
     color: var(--text-clr);
+    text-shadow: 2px 2px 10px var(--shadow-clr)
 }
 
 form {
-    margin-top: 1rem;
     min-height: 70vh;
     padding: 0 12rem;
     display: flex;
@@ -233,13 +219,13 @@ input[type="radio"]:checked::before {
 }
 
 .one input[type="radio"]::before {
-    box-shadow: inset 0em 0em 10rem var(--p1-dark-theme);
+    box-shadow: inset 0em 0em 10rem var(--secondary-theme-clr);
     /* Windows High Contrast Mode */
     /* background-color: CanvasText; */
 }
 
 .two input[type="radio"]::before {
-    box-shadow: inset 0em 0em 10rem var(--p2-dark-theme);
+    box-shadow: inset 0em 0em 10rem var(--secondary-theme-clr);
     /* Windows High Contrast Mode */
     /* background-color: CanvasText; */
 }
@@ -317,7 +303,7 @@ li::marker {
 }
 
 .board button {
-    background-color: var(--main-theme-clr);
+    background-color: var(--h1-clr);
     border: none;
     width: 7rem;
     height: 7rem;
@@ -331,11 +317,11 @@ li::marker {
 }
 
 .board button.player-one-move {
-    color: var(--p1-dark-theme);
+    color: var(--secondary-theme-clr);
 }
 
 .board button.player-two-move {
-    color: var(--p2-dark-theme);
+    color: var(--secondary-theme-clr);
 }
 
 .in-game-options {
@@ -351,13 +337,10 @@ button:not(.board button):hover {
 
 button:not(.board button) {
     font-size: 1.7rem;
-    /* animation: color_change 2.7s cubic-bezier(1, 0.3, 0.3, 1) infinite alternate; */
-    /* animation: name duration timing-function delay iteration-count direction fill-mode; */
     appearance: none;
     border: none;
     color: var(--neutral-text-clr);
-    background-color: var(--p1-theme);
-    /* box-shadow: 2px 2px 10px var(--shadow-clr); */
+    background-color: var(--secondary-theme-clr);
     transition: transform 0.2s ease;
 }
 
