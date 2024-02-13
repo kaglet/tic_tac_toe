@@ -67,18 +67,19 @@ body {
     --h2-font-size: 2.8rem;
     --h3-font-size: 1.9rem;
     --main-theme-clr: black;
-    --main-clr: rgb(0, 1, 90);
-    --secondary-theme-clr: rgb(5, 5, 52);
+    --main-clr: #FFB400;
+    --main-alt: #d69600;
+    --secondary-theme-clr: #F6511D;
     --accent-clr: #eeeeee;
     --shadow-clr: grey;
     --text-clr: #fef9f9;
     --neutral-text-clr: rgb(255, 255, 255);
     --p1-theme: var(--secondary-theme-clr);
-    --p1-dark-theme: #67e565;
+    --p1-dark-theme: #F6511D;
     --p2-theme: var(--p1-theme);
     --p2-dark-theme: var(--p1-dark-theme);
-    --h1-clr: #86e685;
-    --h1-shadow-clr: seagreen;
+    --h1-clr: #000000;
+    /* --h1-shadow-clr: seagreen; */
 }
 
 i {
@@ -100,17 +101,17 @@ i:hover {
 }
 
 h1 {
-    border-bottom: 9px solid var(--p1-dark-theme);
+    /* border-bottom: 9px solid var(--p1-dark-theme); */
     color: var(--h1-clr);
-    text-shadow: 10px 0 3px var(--h1-shadow-clr);
+    /* text-shadow: 10px 0 3px var(--h1-shadow-clr); */
     display: grid;
     justify-content: center;
     padding: 1rem 0 0.5rem 0;
     position: relative;
-    background-color: var(--secondary-theme-clr);
+    /* background-color: var(--secondary-theme-clr); */
     font-size: 7rem;
     letter-spacing: 0.05rem;
-    font-family: sixty-four, cursive;
+    /* font-family: sixty-four, cursive; */
 }
 
 .credit {
@@ -169,7 +170,7 @@ section.player {
     /* box-shadow: 2px 2px 10px var(--shadow-clr); */
     padding: 0rem 2rem;
     /* border: 3px solid var(--p1-dark-theme); */
-    background-color: var(--secondary-theme-clr);
+    background-color: var(--main-alt);
 }
 
 p.vs {
